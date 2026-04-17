@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="black_323232">#323232</color>
+
+    <color name="gray_7F7F7F">#7F7F7F</color>
+    <color name="gray_CCCCCC">#CCCCCC</color>
+    <color name="gray_E6E6E6">#E6E6E6</color>
+    <color name="gray_D9D9D9">#D9D9D9</color>
+    <color name="gray_808080">#808080</color>
+    <color name="gray_706865">#706865</color>
+    <color name="gray_999999">#999999</color>
+
+    <color name="white">#FFFFFFFF</color>
+    <color name="white_F5F5F5">#F5F5F5</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="blue_000D4C">#000D4C</color>
+
+    <color name="purple_9E81FE">#9E81FE</color>
+    <color name="purple_A58AFE">#A58AFE</color>
+    <color name="purple_A286FF">#A286FF</color>
+    <color name="purple_D6CAFE">#D6CAFE</color>
+    <color name="purple_656080">#656080</color>
+    <color name="purple_65607F">#65607F</color>
+    <color name="purple_D7CBFE">#D7CBFE</color>
+
+    <color name="orange_FF9980">#FF9980</color>
+    <color name="orange_FEE0CB">#FEE0CB</color>
+
+
+    <color name="pink_FECBDC">#FECBDC</color>
+
+    <color name="native_bg_ad">#FA659A</color>
+    <color name="native_bg_btn">#FA659A</color>
+    <color name="native_btn_bg">#FA659A</color>
+    <color name="color_app">#FA659A</color>
+    <color name="native_collap_btn_bg">#FA659A</color>
+    <color name="native_bg">#80FFC4F6</color>
+    <color name="native_bg_home">#80CACEFE</color>
+    <color name="native_bg_success">#66F4F4F4</color>
+    <color name="colorPrimary">#FA659A</color>
+    <color name="native_text_color_btn">#ffffff</color>
+    <color name="native_text_color">#FF000000</color>
+
+
+    <color name="color_1">#E2D2D2</color>
+    <color name="color_2">#DCD5FF</color>
+    <color name="color_3">#B7E9F8</color>
+    <color name="color_4">#FFB4B9</color>
+    <color name="color_5">#EBAEF1</color>
+    <color name="color_6">#F5D0C8</color>
+    <color name="color_7">#FDE6C4</color>
+    <color name="color_8">#D2ECE9</color>
+    <color name="color_9">#EAE5E1</color>
+    <color name="color_10">#EAE5E1</color>
+    <color name="color_11">#FFCDFE</color>
+    <color name="color_12">#FFFED2</color>
+    <color name="color_13">#AFCFFE</color>
+    <color name="color_14">#CBE7DB</color>
+    <color name="color_15">#C94D91</color>
+    <color name="color_16">#57B2D9</color>
+    <color name="color_17">#FE0037</color>
+    <color name="color_18">#5AD7C3</color>
+    <color name="color_19">#BD773B</color>
+
+</resources>

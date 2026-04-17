@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.how_to_use.HowToUseActivity">
+
+    <!--    vpgUse-->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vpgUse"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="20dp"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toTopOf="@+id/btnNext"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--    btnClose-->
+    <ImageView
+        android:id="@+id/btnClose"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="64dp"
+        android:src="@drawable/ic_home_htu"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--    dotsIndicator-->
+    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+        android:id="@+id/dotsIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:dotsColor="@color/gray_CCCCCC"
+        app:dotsCornerRadius="100dp"
+        app:dotsSize="16dp"
+        app:dotsSpacing="3dp"
+        app:dotsWidthFactor="2.5"
+        app:layout_constraintBottom_toBottomOf="@+id/btnNext"
+        app:layout_constraintEnd_toStartOf="@+id/btnNext"
+        app:layout_constraintStart_toEndOf="@+id/btnPre"
+        app:layout_constraintTop_toTopOf="@+id/btnNext"
+        app:progressMode="false"
+        app:selectedDotColor="@color/blue_000D4C" />
+
+    <!--    btnPre-->
+    <ImageView
+        android:id="@+id/btnPre"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_pre_htu"
+        app:layout_constraintBottom_toBottomOf="@+id/btnNext"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!--    btnNext-->
+    <ImageView
+        android:id="@+id/btnNext"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="128dp"
+        android:src="@drawable/ic_next_htu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,25 @@
+package com.conchoback.haingon.core.extension
+
+import android.app.Activity
+import android.content.Intent
+import androidx.core.app.ShareCompat
+import androidx.core.net.toUri
+import com.conchoback.haingon.core.helper.RateHelper
+import com.conchoback.haingon.core.helper.SharePreferenceHelper
+import com.conchoback.haingon.core.utils.state.RateState
+
+fun Activity.shareApp() {
+    ShareCompat.IntentBuilder.from(this).setType("text/plain").setChooserTitle("Chooser title")
+        .setText("http://play.google.com/store/apps/details?id=" + (this).packageName)
+        .startChooser()
+}
+
+fun Activity.policy() {
+    val url = "https://sites.google.com/view/clothes-skin-for-rbx/home"
+    val i = Intent(Intent.ACTION_VIEW)
+    i.data = url.toUri()
+    startActivity(i)
+}
+fun Activity.rateApp(sharePreference: SharePreferenceHelper, onRateResult: (RateState) -> Unit = {}) {
+    RateHelper.showRateDialog(this, sharePreference, onRateResult)
+}

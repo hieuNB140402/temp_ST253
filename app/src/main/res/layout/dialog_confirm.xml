@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/bg_dialog"
+            android:orientation="vertical">
+
+            <!--            tvTitle-->
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/freeman_regular"
+                android:gravity="center"
+                android:text="@string/exit"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+
+            <!--            tvDescription-->
+            <TextView
+                android:id="@+id/tvDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/freeman_regular"
+                android:gravity="center"
+                android:paddingHorizontal="32dp"
+                android:text="@string/your_costume_isn_t_finished_yet_you_still_want_to_exit"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:layout_marginBottom="16dp"
+                android:paddingHorizontal="16dp">
+
+                <!--                btnLeft-->
+                <TextView
+                    android:id="@+id/btnLeft"
+                    style="@style/single_marquee"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_button_purple"
+                    android:fontFamily="@font/freeman_regular"
+                    android:gravity="center"
+                    android:paddingVertical="16dp"
+                    android:text="@string/exit"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <!--                btnRight-->
+                <TextView
+                    android:id="@+id/btnRight"
+                    style="@style/single_marquee"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_button_purple"
+                    android:fontFamily="@font/freeman_regular"
+                    android:gravity="center"
+                    android:paddingVertical="16dp"
+                    android:text="@string/cancel"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </FrameLayout>
+</layout>

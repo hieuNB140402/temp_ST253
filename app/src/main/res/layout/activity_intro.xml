@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_F5F5F5"
+    tools:context=".ui.intro.IntroActivity">
+
+    <!--    vpgTutorial-->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vpgTutorial"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="20dp"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toTopOf="@+id/btnNext"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--    dotsIndicator-->
+    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+        android:id="@+id/dotsIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:dotsColor="@color/gray_CCCCCC"
+        app:dotsCornerRadius="100dp"
+        app:dotsSize="16dp"
+        app:dotsSpacing="3dp"
+        app:dotsWidthFactor="2.5"
+        app:layout_constraintBottom_toBottomOf="@+id/btnNext"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btnNext"
+        app:progressMode="false"
+        app:selectedDotColor="@color/blue_000D4C" />
+
+    <!--    btnNext-->
+    <TextView
+        android:id="@+id/btnNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="212dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:text="@string/next"
+        android:textColor="@color/blue_000D4C"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <!--    <FrameLayout-->
+    <!--        android:id="@+id/native_ads"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent">-->
+
+    <!--        <include layout="@layout/ads_native_medium_btn_bottom_2_shimmer" />-->
+    <!--    </FrameLayout>-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

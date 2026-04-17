@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none"
+
+    tools:context=".ui.home.fragment.HomeFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <!--    tv1-->
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bungee_regular"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="56dp"
+            android:text="@string/special_clothes"
+            android:textAllCaps="true"
+            android:textColor="@color/blue_000D4C"
+            android:textSize="16sp" />
+
+        <!--    btnSpecialClothes-->
+        <FrameLayout
+            android:id="@+id/btnSpecialClothes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/img_home_1" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical">
+
+                <!--            tv2-->
+                <TextView
+                    android:id="@+id/tv2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/bungee_regular"
+                    android:text="@string/special"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <!--            tv3-->
+                <TextView
+                    android:id="@+id/tv3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-20dp"
+                    android:layout_marginBottom="-8dp"
+                    android:fontFamily="@font/bungee_regular"
+                    android:text="@string/clothes"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <!--    btnHowToUse-->
+            <FrameLayout
+                android:id="@+id/btnHowToUse"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/img_home_2" />
+
+                <!--            tv4-->
+                <TextView
+                    android:id="@+id/tv4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:fontFamily="@font/bungee_regular"
+                    android:maxLines="2"
+                    android:paddingHorizontal="8dp"
+                    android:text="@string/how_to_use_clothes_for_rbx"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+            </FrameLayout>
+
+            <!--    btnAccessory-->
+            <FrameLayout
+                android:id="@+id/btnAccessory"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/img_home_3" />
+
+                <!--            tv5-->
+                <TextView
+                    android:id="@+id/tv5"
+                    style="@style/single_marquee"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:fontFamily="@font/bungee_regular"
+                    android:paddingHorizontal="8dp"
+                    android:text="@string/accessory"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <!--    tv6-->
+        <TextView
+            android:id="@+id/tv6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/bungee_regular"
+            android:paddingHorizontal="16dp"
+            android:text="@string/basic_clothes"
+            android:textAllCaps="true"
+            android:textColor="@color/blue_000D4C"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
+            android:orientation="horizontal">
+
+            <!--        btnCombo-->
+            <ImageView
+                android:id="@+id/btnCombo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:src="@drawable/img_home_4" />
+
+            <!--        btnShirt-->
+            <ImageView
+                android:id="@+id/btnShirt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="12dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:src="@drawable/img_home_5" />
+
+            <!--        btnPant-->
+            <ImageView
+                android:id="@+id/btnPant"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:src="@drawable/img_home_6" />
+        </LinearLayout>
+
+        <!--    tv7-->
+        <TextView
+            android:id="@+id/tv7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/bungee_regular"
+            android:paddingHorizontal="16dp"
+            android:text="@string/trending"
+            android:textAllCaps="true"
+            android:textColor="@color/blue_000D4C"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
+            android:orientation="horizontal">
+
+            <!--        btnTrending1-->
+            <ImageView
+                android:id="@+id/btnTrending1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:src="@drawable/img_trending_1" />
+
+            <!--        btnTrending2-->
+            <ImageView
+                android:id="@+id/btnTrending2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="12dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:src="@drawable/img_trending_2" />
+
+            <!--        btnTrending3-->
+            <ImageView
+                android:id="@+id/btnTrending3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:src="@drawable/img_trending_3" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--    btnDone-->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btnDone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="32dp"
+            app:cardElevation="1dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="#E6E6E6"
+            app:strokeWidth="0.5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="center"
+                android:text="@string/done"
+                android:textColor="@color/blue_000D4C"
+                android:textSize="16sp" />
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <!--        flText-->
+        <FrameLayout
+            android:id="@+id/flText"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="35dp"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:layout_constraintTop_toBottomOf="@+id/btnDone">
+
+            <!--            tvGetText-->
+            <TextView
+                android:id="@+id/tvGetText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/transparent"
+                android:fontFamily="@font/roboto_bold"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:visibility="invisible" />
+
+            <!--            edtText-->
+            <EditText
+                android:id="@+id/edtText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/transparent"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:fontFamily="@font/roboto_bold"
+                android:gravity="center"
+                android:imeOptions="actionDone"
+                android:maxLength="50"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:visibility="visible" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <!--            rcvTextColor-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcvTextColor"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toTopOf="@+id/rcvFont"
+                tools:listitem="@layout/item_text_color" />
+
+            <!--            rcvFont-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcvFont"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:listitem="@layout/item_font" />
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

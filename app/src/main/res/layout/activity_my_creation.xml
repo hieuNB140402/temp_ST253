@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.my_creation.MyCreationActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_app_background" />
+
+    <!-- layoutActionBar -->
+    <FrameLayout
+        android:id="@+id/layoutActionBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include
+            android:id="@+id/actionBar"
+            layout="@layout/layout_actionbar" />
+    </FrameLayout>
+
+    <!--    vBackground-->
+    <View
+        android:id="@+id/vBackground"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_shirt_focus"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/lnlOption" />
+
+    <!--    lnlOption-->
+    <LinearLayout
+        android:id="@+id/lnlOption"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/glVer062"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutActionBar">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <!--            btnCreationShirt-->
+            <ImageView
+                android:id="@+id/btnCreationShirt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_creation_shirt_selected" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_weight="1">
+
+            <!--            btnCreationTShirt-->
+            <ImageView
+                android:id="@+id/btnCreationTShirt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_creation_t_shirt" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <!--            btnCreationPant-->
+            <ImageView
+                android:id="@+id/btnCreationPant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_creation_pant" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <!--    btnDelete-->
+    <ImageView
+        android:id="@+id/btnDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_delete_creation"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/lnlOption"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/lnlOption" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:paddingHorizontal="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/flBottomBar"
+        app:layout_constraintTop_toBottomOf="@+id/lnlOption">
+
+        <!--        rcvShirt-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcvShirt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2"
+            tools:listitem="@layout/item_my_creation" />
+
+        <!--        rcvTShirt-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcvTShirt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2"
+            tools:listitem="@layout/item_my_creation" />
+
+        <!--        rcvPant-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcvPant"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2"
+            tools:listitem="@layout/item_my_creation" />
+    </FrameLayout>
+
+    <!--    flBottomBar-->
+    <FrameLayout
+        android:id="@+id/flBottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!--        bottomBar-->
+        <include
+            android:id="@+id/bottomBar"
+            layout="@layout/layout_double_button" />
+    </FrameLayout>
+
+    <!--    flNoItem-->
+    <FrameLayout
+        android:id="@+id/flNoItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/vBackground">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/freeman_regular"
+            android:text="@string/no_item_is_here"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    </FrameLayout>
+    <!--    glVer062-->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/glVer062"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.62" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

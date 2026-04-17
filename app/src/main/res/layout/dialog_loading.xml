@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/bg_dialog"
+            android:orientation="vertical">
+
+            <!--            tvTitle-->
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/freeman_regular"
+                android:gravity="center"
+                android:text="@string/loading"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+
+            <!--            tvDescription-->
+            <TextView
+                android:id="@+id/tvDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/freeman_regular"
+                android:gravity="center"
+                android:paddingHorizontal="32dp"
+                android:text="@string/bro_please_wait_a_moment"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginVertical="16dp"
+                app:lottie_rawRes="@raw/loading"
+                app:lottie_repeatMode="restart" />
+        </LinearLayout>
+    </FrameLayout>
+</layout>

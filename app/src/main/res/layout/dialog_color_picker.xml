@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!--            ctlMain-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/ctlMain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:background="@drawable/bg_dialog"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <!--            colorPickerView-->
+                <ir.kotlin.kavehcolorpicker.KavehColorPicker
+                    android:id="@+id/colorPickerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:layout_marginHorizontal="13dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/colorPickerView">
+
+                    <ir.kotlin.kavehcolorpicker.KavehHueSlider
+                        android:id="@+id/hueSlider"
+                        android:layout_width="0dp"
+                        android:layout_height="24dp"
+                        android:layout_weight="7" />
+
+                    <!--                btnDone-->
+                    <FrameLayout
+                        android:id="@+id/btnDone"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="3"
+                        android:background="@drawable/bg_8_solid_white">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:gravity="center"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="8dp"
+                            android:text="@string/done"
+                            android:textColor="@color/blue_000D4C"
+                            android:textSize="16sp" />
+                    </FrameLayout>
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!--        btnClose-->
+            <ImageView
+                android:id="@+id/btnClose"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/ic_close"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ctlMain" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </LinearLayout>
+</layout>
