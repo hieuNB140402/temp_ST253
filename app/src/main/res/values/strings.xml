@@ -103,4 +103,5 @@
     <string name="accessory">accessory</string>
     <string name="basic_clothes">Basic Clothes</string>
     <string name="trending">Trending</string>
+    <string name="please_check_your_network_connection">Please check your network connection.</string>
 </resources>

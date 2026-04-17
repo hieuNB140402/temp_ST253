@@ -173,7 +173,7 @@
                 android:layout_marginHorizontal="12dp"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
-                android:src="@drawable/img_home_5" />
+                android:src="@drawable/img_home_6" />
 
             <!--        btnPant-->
             <ImageView
@@ -182,7 +182,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
-                android:src="@drawable/img_home_6" />
+                android:src="@drawable/img_home_5" />
         </LinearLayout>
 
         <!--    tv7-->

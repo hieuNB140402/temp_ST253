@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.conchoback.haingon.core.base.BaseActivity
 import com.conchoback.haingon.core.extension.viewModel
+import com.conchoback.haingon.core.utils.state.CallApiState
 import com.conchoback.haingon.core.utils.state.HandleState
 import com.conchoback.haingon.databinding.ActivitySplashBinding
 import com.conchoback.haingon.ui.home.DataViewModel
@@ -34,18 +35,17 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 
         intentActivity = Intent(this, if (sharePreference.getIsFirstLang()) LanguageActivity::class.java else IntroActivity::class.java)
 
-//        lifecycleScope.launch {
-//            delay(3000)
-//            startActivity(intentActivity)
-//        }
 
         lifecycleScope.launch(Dispatchers.IO) {
+            dataViewModel.checkCurrentVersion(this@SplashActivity)
+
             dataViewModel.getAllParts(this@SplashActivity, sharePreference).collect { state ->
                 when (state) {
+                    CallApiState.Loading -> {}
                     else -> {
-//                        withContext(Dispatchers.Main) {
-//                            startActivity(intentActivity)
-//                        }
+                        withContext(Dispatchers.Main) {
+                            startActivity(intentActivity)
+                        }
                     }
                 }
             }

@@ -20,12 +20,14 @@ import com.conchoback.haingon.core.extension.invisible
 import com.conchoback.haingon.core.extension.margin
 import com.conchoback.haingon.core.extension.tap
 import com.conchoback.haingon.core.extension.visible
+import com.conchoback.haingon.core.helper.InternetHelper
 import com.conchoback.haingon.core.utils.key.IntentKey
 import com.conchoback.haingon.core.utils.key.ValueKey
+import com.conchoback.haingon.data.model.AccessoryModel
 import com.conchoback.haingon.data.model.clothes.ClothesModel
 import com.conchoback.haingon.databinding.ActivityView3dBinding
 import com.conchoback.haingon.ui.custom.CustomActivity
-import com.conchoback.haingon.ui.list.ChooseClothesAccessoryActivity
+import com.conchoback.haingon.ui.choose_clothes_after.ChooseClothesAccessoryActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.jvm.java
@@ -76,13 +78,14 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
             btnThemeDark.tap { viewModel.dispatch(View3dAction.ChangeTheme(ValueKey.DARK_THEME)) }
             btnThemeLight.tap { viewModel.dispatch(View3dAction.ChangeTheme(ValueKey.LIGHT_THEME)) }
 
-            btnType1.tap { viewModel.dispatch(View3dAction.ChangeTypeCharacter(ValueKey.CHARACTER_1)) }
-            btnType2.tap { viewModel.dispatch(View3dAction.ChangeTypeCharacter(ValueKey.CHARACTER_2)) }
-            btnType3.tap { viewModel.dispatch(View3dAction.ChangeTypeCharacter(ValueKey.CHARACTER_3)) }
-            btnType4.tap { viewModel.dispatch(View3dAction.ChangeTypeCharacter(ValueKey.CHARACTER_4)) }
+            btnType1.tap { checkInternet { viewModel.dispatch(View3dAction.ChangeTypeCharacter(ValueKey.CHARACTER_1)) } }
+            btnType2.tap { checkInternet { viewModel.dispatch(View3dAction.ChangeTypeCharacter(ValueKey.CHARACTER_2)) } }
+            btnType3.tap { checkInternet { viewModel.dispatch(View3dAction.ChangeTypeCharacter(ValueKey.CHARACTER_3)) } }
+            btnType4.tap { checkInternet { viewModel.dispatch(View3dAction.ChangeTypeCharacter(ValueKey.CHARACTER_4)) } }
 
             btnShirt.tap { handleTapClothes(ValueKey.SHIRT) }
             btnPant.tap { handleTapClothes(ValueKey.PANT) }
+            btnAccessory.tap { handleTapClothes(ValueKey.ACCESSORY) }
 
             btnImage.tap { handleEditClothes(ValueKey.IMAGE_OPTION) }
             btnBrush.tap { handleEditClothes(ValueKey.BRUSH_OPTION) }
@@ -120,8 +123,8 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
                 lifecycleScope.launch {
                     delay(100)
                     viewModel.dispatch(View3dAction.ChangeTheme(ValueKey.LIGHT_THEME))
-                    viewModel.dispatch(View3dAction.ChangeTypeClothes(ValueKey.ACCESSORY))
-//                    viewModel.dispatch(View3dAction.ChangeTypeClothes(intent.getStringExtra(IntentKey.CLOTHES_TYPE) ?: ValueKey.SHIRT))
+//                    viewModel.dispatch(View3dAction.ChangeTypeClothes(ValueKey.ACCESSORY))
+                    viewModel.dispatch(View3dAction.ChangeTypeClothes(intent.getStringExtra(IntentKey.CLOTHES_TYPE) ?: ValueKey.SHIRT))
 
                 }
 
@@ -132,22 +135,24 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
 
     // Handle
     //==================================================================================================================
-
     private fun handleTapClothes(type: String) {
         if (!viewModel.isAccessory()) {
             viewModel.dispatch(View3dAction.ChangeShowFeature(true, type))
             return
         }
 
-        val nextScreen = Intent(this, ChooseClothesAccessoryActivity::class.java)
+        checkInternet {
+            val nextScreen = Intent(this, ChooseClothesAccessoryActivity::class.java)
 
-        nextScreen.putExtra(IntentKey.PATH_KEY, viewModel.getClothesByType(type))
-        nextScreen.putExtra(IntentKey.TYPE_KEY, type)
+            nextScreen.putExtra(IntentKey.PATH_KEY, viewModel.getClothesByType(type))
+            nextScreen.putExtra(IntentKey.TYPE_KEY, type)
 
-        resultClothesLauncher.launch(nextScreen)
+            resultClothesLauncher.launch(nextScreen)
+        }
+
     }
 
-    private fun handleEditClothes(typeEdit: Int){
+    private fun handleEditClothes(typeEdit: Int) {
         val nextScreen = Intent(this, CustomActivity::class.java)
         val typeClothesSelected = viewModel.typeClothesSelected
 
@@ -156,6 +161,15 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
         nextScreen.putExtra(IntentKey.INTENT_KEY, typeEdit)
 
         resultClothesLauncher.launch(nextScreen)
+    }
+
+
+    private fun checkInternet(action: () -> Unit) {
+        if (InternetHelper.isInternetAvailable(this)) {
+            action.invoke()
+        } else {
+            showToast(R.string.please_check_your_network_connection)
+        }
     }
 
     // Observable
@@ -202,7 +216,9 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
                 viewModel.apply {
                     dispatch(View3dAction.ChangeShirt(ClothesModel(ValueKey.SHIRT, pathClothesDefault)))
                     dispatch(View3dAction.ChangePant(ClothesModel(ValueKey.PANT, pathClothesDefault)))
+                    dispatch(View3dAction.ChangeAccessory(viewModel.convertFromJsonAccessory(pathClothes)))
                 }
+
             }
 
             else -> return@with
@@ -249,7 +265,8 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
         dLog("Pant: $item")
     }
 
-    private fun renderAccessories(list: List<ClothesModel>) {
+    private fun renderAccessories(list: List<AccessoryModel>) {
+        binding.webView.evaluateJavascript(viewModel.updateAccessory(list), null)
         dLog("Accessories: $list")
     }
 

@@ -6,21 +6,22 @@ import com.conchoback.haingon.data.model.clothes.SkinModel
 
 class App : Application() {
     val sharePreference by lazy { SharePreferenceHelper(this) }
-    val advancedSkinList = ArrayList<SkinModel>()
-    val basicSkinList = ArrayList<SkinModel>()
+    val shirtListDefault = ArrayList<String>()
+    val pantListDefault = ArrayList<String>()
 
-    fun reupdateAdvancedSkinList(list: List<SkinModel>){
-        advancedSkinList.clear()
-        advancedSkinList.addAll(list)
+    fun reupdateShirtListDefault(list: List<String>) {
+        shirtListDefault.clear()
+        shirtListDefault.addAll(list)
     }
 
-    fun reupdateBasicSkinList(list: List<SkinModel>){
-        basicSkinList.clear()
-        basicSkinList.addAll(list)
+    fun reupdatePantListDefault(list: List<String>) {
+        pantListDefault.clear()
+        pantListDefault.addAll(list)
     }
+
 
     companion object {
-        lateinit var instant : App
+        lateinit var instant: App
             private set
     }
 

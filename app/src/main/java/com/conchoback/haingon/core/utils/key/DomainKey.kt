@@ -8,5 +8,7 @@ object DomainKey {
     const val HTTP = "https://"
     const val SPECIAL_CATEGORY = "special"
     const val PREVIEW_2D = "2D"
+    const val PREVIEW_3D = "3D"
+
     const val LVT = "lvt"
 }

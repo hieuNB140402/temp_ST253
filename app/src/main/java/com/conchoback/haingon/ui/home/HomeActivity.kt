@@ -10,6 +10,7 @@ import com.conchoback.haingon.core.base.BaseActivity
 import com.conchoback.haingon.core.extension.rateApp
 import com.conchoback.haingon.core.extension.strings
 import com.conchoback.haingon.core.extension.tap
+import com.conchoback.haingon.core.helper.InternetHelper
 import com.conchoback.haingon.core.helper.LanguageHelper
 import com.conchoback.haingon.core.utils.DataLocal
 import com.conchoback.haingon.core.utils.state.RateState
@@ -91,6 +92,14 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
                     image.setImageResource(res)
                 }
             }
+        }
+    }
+
+    fun checkInternet(action: () -> Unit) {
+        if (InternetHelper.isInternetAvailable(this)) {
+            action.invoke()
+        } else {
+            showToast(R.string.please_check_your_network_connection)
         }
     }
 

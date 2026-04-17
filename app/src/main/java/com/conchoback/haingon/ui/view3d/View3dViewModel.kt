@@ -1,5 +1,6 @@
 package com.conchoback.haingon.ui.view3d
 
+import android.R.attr.path
 import android.R.attr.type
 import android.app.Activity
 import android.content.Context
@@ -11,12 +12,16 @@ import androidx.lifecycle.viewModelScope
 import androidx.webkit.WebViewAssetLoader
 import com.conchoback.haingon.core.extension.eLog
 import com.conchoback.haingon.core.extension.loadImage
+import com.conchoback.haingon.core.helper.MediaHelper
 import com.conchoback.haingon.core.utils.DataLocal
 import com.conchoback.haingon.core.utils.key.AssetsKey
 import com.conchoback.haingon.core.utils.key.DomainKey
 import com.conchoback.haingon.core.utils.key.IntentKey
 import com.conchoback.haingon.core.utils.key.ValueKey
+import com.conchoback.haingon.data.model.AccessoryModel
 import com.conchoback.haingon.data.model.clothes.ClothesModel
+import com.google.common.reflect.TypeToken
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -46,6 +51,7 @@ class View3dViewModel : ViewModel() {
     //==================================================================================================================
     var withLayoutFeature = 0
     var typeClothesSelected = ""
+
     // Getter Setter
     //==================================================================================================================
     fun dispatch(action: View3dAction) {
@@ -152,33 +158,40 @@ class View3dViewModel : ViewModel() {
                 // Quần hoặc áo (edit)
                 val clothes = data?.getStringExtra(IntentKey.TYPE_CLOTHES_KEY)
 
-                if (clothes == ValueKey.SHIRT){
+                if (clothes == ValueKey.SHIRT) {
                     dispatch(View3dAction.ChangeShirt(ClothesModel(ValueKey.SHIRT, editedClothes)))
-                }else{
+                } else {
                     dispatch(View3dAction.ChangePant(ClothesModel(ValueKey.PANT, editedClothes)))
                 }
 
             } else {
                 // Tất cả (Chọn từ api)
                 val clothes = data?.getStringExtra(IntentKey.TYPE_CLOTHES_KEY)
-                val clothesSelected = data?.getStringExtra(IntentKey.CHOOSE_CLOTHES_KEY)
+                val clothesSelected = data?.getStringExtra(IntentKey.CHOOSE_CLOTHES_KEY) ?: ""
 
-                when(clothes){
+                when (clothes) {
                     ValueKey.SHIRT -> {
-                        dispatch(View3dAction.ChangeShirt(ClothesModel(ValueKey.SHIRT, clothesSelected!!)))
+                        dispatch(View3dAction.ChangeShirt(ClothesModel(ValueKey.SHIRT, clothesSelected)))
                     }
+
                     ValueKey.PANT -> {
-                        dispatch(View3dAction.ChangePant(ClothesModel(ValueKey.PANT, clothesSelected!!)))
-
+                        dispatch(View3dAction.ChangePant(ClothesModel(ValueKey.PANT, clothesSelected)))
                     }
-                    ValueKey.ACCESSORY -> {
 
+                    ValueKey.ACCESSORY -> {
+                        dispatch(View3dAction.ChangeAccessory(convertFromJsonAccessory(clothesSelected)))
                     }
                 }
             }
 
 
         }
+    }
+
+    fun convertFromJsonAccessory(clothesSelected: String) : List<AccessoryModel> {
+        val type = object : TypeToken<List<AccessoryModel>>() {}.type
+        val list: List<AccessoryModel> = Gson().fromJson(clothesSelected, type)
+        return list
     }
 
     fun loadClothes(imagePath: String): String {
@@ -187,7 +200,7 @@ class View3dViewModel : ViewModel() {
             imagePath.contains(ValueKey.TEMP_ALBUM) -> "${AssetsKey.DOMAIN_INTERNAL_WEBVIEW}/$imagePath"
             // api
             imagePath.contains(DomainKey.SPECIAL_CATEGORY) -> {
-                val domain  = if (DataLocal.isFailBaseURL) DomainKey.BASE_URL_PREVENTIVE else DomainKey.BASE_URL
+                val domain = if (DataLocal.isFailBaseURL) DomainKey.BASE_URL_PREVENTIVE else DomainKey.BASE_URL
                 "$domain/${DomainKey.SUB_DOMAIN}/${imagePath}"
             }
             // asset
@@ -195,12 +208,18 @@ class View3dViewModel : ViewModel() {
         }
     }
 
-
     fun getClothesByType(type: String): String {
         return when (type) {
             ValueKey.SHIRT -> shirtFlow.value!!.item
             ValueKey.PANT -> pantFlow.value!!.item
-            else -> "vaicut"
+            else -> {
+                if (accessoryFlow.value.isNotEmpty()) {
+                    val json = Gson().toJson(accessoryFlow.value)
+                    json
+                } else {
+                    ""
+                }
+            }
         }
     }
 
@@ -223,5 +242,19 @@ class View3dViewModel : ViewModel() {
 
     fun updateCharacter(character: String): String {
         return "window.switchCharacter('$character')"
+    }
+
+    fun updateAccessory(accessoryList: List<AccessoryModel>): String {
+        val domain = if (DataLocal.isFailBaseURL) DomainKey.BASE_URL_PREVENTIVE else DomainKey.BASE_URL
+
+        val jsonList = accessoryList.map {
+            AccessoryModel(
+                key = it.key,
+                value =  "$domain/${DomainKey.SUB_DOMAIN}/${DomainKey.PREVIEW_3D}/${it.value}.glb"
+            )
+        }
+
+        val json = Gson().toJson(jsonList)
+        return "window.setAccessories('$json')"
     }
 }

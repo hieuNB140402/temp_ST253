@@ -78,7 +78,7 @@ class DataViewModel : ViewModel() {
         }
     }
 
-    private fun checkCurrentVersion(context: Context, sharePreferenceHelper: SharePreferenceHelper) {
+    suspend fun checkCurrentVersion(context: Context) {
         val fileAPI = File(context.filesDir, ValueKey.DATA_FILE_API_INTERNAL)
         if (fileAPI.exists()) fileAPI.delete()
 
@@ -93,7 +93,7 @@ class DataViewModel : ViewModel() {
 //
 //            if (file.exists()) file.delete()
 //        }
-        ensureData(context, sharePreferenceHelper)
+//        ensureData(context, sharePreferenceHelper)
     }
 
     fun ensureData(context: Context, sharePreferenceHelper: SharePreferenceHelper) {

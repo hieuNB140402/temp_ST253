@@ -16,6 +16,8 @@ import com.conchoback.haingon.core.helper.LanguageHelper
 import com.conchoback.haingon.core.utils.key.IntentKey
 import com.conchoback.haingon.core.utils.key.ValueKey
 import com.conchoback.haingon.databinding.FragmentHomeBinding
+import com.conchoback.haingon.ui.choose_clothes_before.ChooseClothesBeforeActivity
+import com.conchoback.haingon.ui.home.HomeActivity
 import com.conchoback.haingon.ui.home.HomeViewModel
 import com.conchoback.haingon.ui.how_to_use.HowToUseActivity
 import com.conchoback.haingon.ui.view3d.View3dActivity
@@ -32,12 +34,25 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
 
     override fun viewListener() {
+        val homeActivity = (activity as HomeActivity)
         binding.apply {
-            btnHowToUse.tap { requireActivity().startIntentRightToLeft(HowToUseActivity::class.java) }
+            btnHowToUse.tap { homeActivity.startIntentRightToLeft(HowToUseActivity::class.java) }
 
-            btnTrending1.tap { handleTrending(1) }
-            btnTrending2.tap { handleTrending(2) }
-            btnTrending3.tap { handleTrending(3) }
+            btnAccessory.tap {
+                homeActivity.checkInternet {
+                    homeActivity.startIntentRightToLeft(
+                        ChooseClothesBeforeActivity::class.java,
+                        ValueKey.ACCESSORY
+                    )
+                }
+                btnCombo.tap { homeActivity.startIntentRightToLeft(ChooseClothesBeforeActivity::class.java, ValueKey.COMBO) }
+                btnShirt.tap { homeActivity.startIntentRightToLeft(ChooseClothesBeforeActivity::class.java, ValueKey.SHIRT) }
+                btnPant.tap { homeActivity.startIntentRightToLeft(ChooseClothesBeforeActivity::class.java, ValueKey.PANT) }
+
+                btnTrending1.tap { handleTrending(1) }
+                btnTrending2.tap { handleTrending(2) }
+                btnTrending3.tap { handleTrending(3) }
+            }
         }
     }
 
@@ -61,7 +76,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         }
     }
 
-    private fun handleTrending(index: Int){
+    private fun handleTrending(index: Int) {
         val nextScreen = Intent(requireActivity(), View3dActivity::class.java)
         nextScreen.apply {
             putExtra(IntentKey.CLOTHES_TYPE, ValueKey.COMBO)

@@ -1,5 +1,6 @@
 package com.conchoback.haingon.ui.view3d
 
+import com.conchoback.haingon.data.model.AccessoryModel
 import com.conchoback.haingon.data.model.clothes.ClothesModel
 
 sealed class View3dAction {
@@ -10,7 +11,7 @@ sealed class View3dAction {
     data class ChangeShirt(val itemShirt: ClothesModel) : View3dAction()
     data class ChangePant(val itemPant: ClothesModel) : View3dAction()
 
-    data class ChangeAccessory(val itemList: List<ClothesModel>) : View3dAction()
+    data class ChangeAccessory(val itemList: List<AccessoryModel>) : View3dAction()
 
     object ClearAccessory : View3dAction()
 

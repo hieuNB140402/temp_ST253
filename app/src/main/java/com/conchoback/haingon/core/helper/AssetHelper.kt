@@ -27,6 +27,12 @@ object AssetHelper {
         return sortedData ?: arrayListOf()
     }
 
+    fun getSubfoldersAssetWithSubDomain(context: Context, path: String): ArrayList<String> {
+        val allData = context.assets.list(path)
+        val sortedData = MediaHelper.sortAsset(allData)?.map { "$path/$it" }?.toCollection(ArrayList())
+        return sortedData ?: arrayListOf()
+    }
+
     // Read sub folder
 //    fun getSubfoldersNotDomainAsset(context: Context, path: String): ArrayList<String> {
 //        val allData = context.assets.list(path)

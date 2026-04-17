@@ -1,5 +1,6 @@
 package com.conchoback.haingon.ui.view3d
 
+import com.conchoback.haingon.data.model.AccessoryModel
 import com.conchoback.haingon.data.model.clothes.ClothesModel
 
 data class View3dState(
@@ -8,6 +9,6 @@ data class View3dState(
     val typeCharacter: String = "",
     val shirt: ClothesModel? = null,
     val pant: ClothesModel? = null,
-    val accessories: List<ClothesModel> = emptyList(),
+    val accessories: List<AccessoryModel> = emptyList(),
     val isShowFeature: Boolean = false
 )
