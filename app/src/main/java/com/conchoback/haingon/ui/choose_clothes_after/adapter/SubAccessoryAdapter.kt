@@ -8,8 +8,8 @@ import com.conchoback.haingon.core.extension.loadImage
 import com.conchoback.haingon.core.extension.tap
 import com.conchoback.haingon.core.utils.DataLocal
 import com.conchoback.haingon.core.utils.key.DomainKey
-import com.conchoback.haingon.data.model.AccessoryModel
-import com.conchoback.haingon.data.model.SubAccessoryModel
+import com.conchoback.haingon.data.model.clothes.AccessoryModel
+import com.conchoback.haingon.data.model.clothes.SubAccessoryModel
 import com.conchoback.haingon.databinding.ItemChooseClothesAccessoryBinding
 
 class SubAccessoryAdapter :
@@ -22,7 +22,7 @@ class SubAccessoryAdapter :
 
             if (position != 0) {
                 val domain = if (DataLocal.isFailBaseURL) DomainKey.BASE_URL_PREVENTIVE else DomainKey.BASE_URL
-                val path = "$domain/${DomainKey.SUB_DOMAIN}/${DomainKey.PREVIEW_2D}/${item.accessory.value}.png"
+                val path = "$domain${DomainKey.SUB_DOMAIN}/${DomainKey.PREVIEW_2D}/${item.accessory.value}.png"
 
                 dLog("path[$position]: $path")
                 loadImage(path, imvImage)

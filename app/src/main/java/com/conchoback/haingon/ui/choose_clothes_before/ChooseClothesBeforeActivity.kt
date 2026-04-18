@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.conchoback.haingon.R
 import com.conchoback.haingon.core.base.BaseActivity
+import com.conchoback.haingon.core.extension.dLog
 import com.conchoback.haingon.core.extension.gone
 import com.conchoback.haingon.core.extension.handleBackLeftToRight
 import com.conchoback.haingon.core.extension.setImageActionBar
@@ -87,7 +88,7 @@ class ChooseClothesBeforeActivity : BaseActivity<ActivityChooseClothesBeforeBind
                 clothesAdapter.submitList(clothesList)
             }
         }
-        clothesAdapter.onItemClick = { path -> handleNextScreen(path)}
+        clothesAdapter.onItemClick = { path -> handleNextScreen(path) }
     }
 
     private fun setupAccessoryUI() {
@@ -108,10 +109,32 @@ class ChooseClothesBeforeActivity : BaseActivity<ActivityChooseClothesBeforeBind
             }
         }
 
-        accessoryAdapter.onItemClick = { model -> checkInternet { handleNextScreen(viewModel.convertToJson(model)) }}
+        accessoryAdapter.onItemClick = { model -> checkInternet { handleNextScreen(viewModel.convertToJson(model)) } }
     }
 
-    private fun handleNextScreen(path: String){
+    private fun setupComboUI() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val comboList = viewModel.loadComboList(
+                this@ChooseClothesBeforeActivity,
+                chooseClothesViewModel.loadClothesList("")
+            )
+
+            withContext(Dispatchers.Main) {
+                binding.rcvClothes.apply {
+                    adapter = clothesAdapter
+                    itemAnimator = null
+                }
+                binding.rcvClothes.visible()
+                binding.rcvAccessory.gone()
+
+                dismissLoading(true)
+                clothesAdapter.submitList(comboList)
+            }
+        }
+        clothesAdapter.onItemClick = { path -> checkInternet { handleNextScreen(path) } }
+    }
+
+    private fun handleNextScreen(path: String) {
         val nextScreen = Intent(this, View3dActivity::class.java)
         nextScreen.apply {
             putExtra(IntentKey.CLOTHES_TYPE, viewModel.typeClothes.value)
@@ -119,6 +142,7 @@ class ChooseClothesBeforeActivity : BaseActivity<ActivityChooseClothesBeforeBind
         }
 
         val anim = AnimationHelper.intentAnimRL(this)
+
         startActivity(nextScreen, anim.toBundle())
     }
 
@@ -129,13 +153,23 @@ class ChooseClothesBeforeActivity : BaseActivity<ActivityChooseClothesBeforeBind
             showToast(R.string.please_check_your_network_connection)
         }
     }
+
     // Observable
     //==================================================================================================================
     private fun setupTypeClothes(type: String) {
         when (type) {
             ValueKey.SHIRT -> setupClothesUI()
             ValueKey.PANT -> setupClothesUI()
-            ValueKey.COMBO -> {}
+            ValueKey.COMBO -> {
+                viewModel.updateTypeCombo(intent.getStringExtra(IntentKey.COMBO_TYPE) ?: ValueKey.BASIC_SKIN)
+
+                if (viewModel.isSpecialCombo()) {
+                    dataViewModel.saveAndReadData(this, sharePreference)
+                } else {
+                    setupComboUI()
+                }
+            }
+
             ValueKey.ACCESSORY -> dataViewModel.saveAndReadData(this, sharePreference)
             else -> return
         }
@@ -148,7 +182,11 @@ class ChooseClothesBeforeActivity : BaseActivity<ActivityChooseClothesBeforeBind
 
     private fun setupGetDataFromDataVM(data: PathAPI?) {
         if (data == null) return
-        setupAccessoryUI()
+        if (viewModel.typeClothes.value == ValueKey.ACCESSORY) {
+            setupAccessoryUI()
+        } else {
+            setupComboUI()
+        }
     }
     // Result + Permission
     //==================================================================================================================

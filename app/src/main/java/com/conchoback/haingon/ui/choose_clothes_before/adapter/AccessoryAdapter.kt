@@ -8,8 +8,8 @@ import com.conchoback.haingon.core.extension.tap
 import com.conchoback.haingon.core.utils.DataLocal
 import com.conchoback.haingon.core.utils.key.AssetsKey
 import com.conchoback.haingon.core.utils.key.DomainKey
-import com.conchoback.haingon.data.model.AccessoryModel
-import com.conchoback.haingon.data.model.AccessorySelectedModel
+import com.conchoback.haingon.data.model.clothes.AccessoryModel
+import com.conchoback.haingon.data.model.clothes.AccessorySelectedModel
 import com.conchoback.haingon.databinding.ItemChooseClothesAccessoryBinding
 
 class AccessoryAdapter :
@@ -21,7 +21,7 @@ class AccessoryAdapter :
             vFocus.gone()
             dLog("${AssetsKey.ASSET_MANAGER}/$item")
             val domain = if (DataLocal.isFailBaseURL) DomainKey.BASE_URL_PREVENTIVE else DomainKey.BASE_URL
-            val path = "$domain/${DomainKey.SUB_DOMAIN}/${DomainKey.PREVIEW_2D}/${item.value}.png"
+            val path = "$domain${DomainKey.SUB_DOMAIN}/${DomainKey.PREVIEW_2D}/${item.value}.png"
 
             dLog("path[$position]: $path")
             loadImage(path, imvImage)

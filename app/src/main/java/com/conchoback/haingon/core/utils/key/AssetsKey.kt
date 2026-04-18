@@ -8,8 +8,13 @@ object AssetsKey {
     const val DOMAIN_ASSET_WEBVIEW = "https://appassets.androidplatform.net/assets"
     const val DOMAIN_INTERNAL_WEBVIEW = "https://appassets.androidplatform.net/internal"
 
-    const val SHIRT_DEFAULT = "skin/shirt"
-    const val PANT_DEFAULT = "skin/pant"
+    const val SHIRT_BASIC = "skin/basic/shirt"
+    const val PANT_BASIC = "skin/basic/pant"
+
+    const val SHIRT_COMBO = "skin/combo/shirt"
+    const val PANT_COMBO = "skin/combo/pant"
+
+    const val COMBO_ASSET = "combo"
 
     const val TRENDING_ASSET = "trending"
     const val IMAGE_ASSET = "image"

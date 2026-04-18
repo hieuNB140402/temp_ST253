@@ -2,7 +2,7 @@ package com.conchoback.haingon.core.utils.key
 
 object IntentKey {
     const val INTENT_KEY = "INTENT_KEY"
-    const val SKIN_TYPE = "SKIN_TYPE"
+    const val COMBO_TYPE = "COMBO_TYPE"
     const val CLOTHES_TYPE = "CLOTHES_TYPE"
     const val IMAGE_KEY = "IMAGE_KEY"
     const val TYPE_CLOTHES_KEY = "TYPE_CLOTHES_KEY"

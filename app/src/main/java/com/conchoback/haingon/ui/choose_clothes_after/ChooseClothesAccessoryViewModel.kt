@@ -2,11 +2,11 @@ package com.conchoback.haingon.ui.choose_clothes_after
 
 import androidx.lifecycle.ViewModel
 import com.conchoback.haingon.core.utils.key.ValueKey
-import com.conchoback.haingon.data.model.AccessoryModel
-import com.conchoback.haingon.data.model.AccessorySelectedModel
+import com.conchoback.haingon.data.model.clothes.AccessoryModel
+import com.conchoback.haingon.data.model.clothes.AccessorySelectedModel
 import com.conchoback.haingon.data.model.PathAPI
 import com.conchoback.haingon.data.model.SelectedModel
-import com.conchoback.haingon.data.model.SubAccessoryModel
+import com.conchoback.haingon.data.model.clothes.SubAccessoryModel
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -94,6 +94,7 @@ class ChooseClothesAccessoryViewModel : ViewModel() {
         val config = listOf(
             Triple(ValueKey.GLASSES_SUB_ACCESSORY, models.glasses, true),
             Triple(ValueKey.HAIR_SUB_ACCESSORY, models.hair, false),
+            Triple(ValueKey.HAT_SUB_ACCESSORY, models.hat, false),
             Triple(ValueKey.LEFTHAND_SUB_ACCESSORY, models.lefthand, false),
             Triple(ValueKey.NECK_SUB_ACCESSORY, models.neck, false),
             Triple(ValueKey.RIGHTHAND_SUB_ACCESSORY, models.righthand, false),

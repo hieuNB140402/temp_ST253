@@ -1,6 +1,6 @@
 {
   "silver-gemstone-sunglasses-roblox-zqwosfxb.glb": {
-    "label": "Kính Silver Gemstone",
+    "label": "silver-gemstone-sunglasses-roblox-zqwosfxb",
     "attachment": "FaceCenter",
     "default": {
       "x": 0,
@@ -38,7 +38,7 @@
     }
   },
   "stellar-eclipse-sunglasses-roblox-ykatfxjf.glb": {
-    "label": "Kính Stellar Eclipse",
+    "label": "stellar-eclipse-sunglasses-roblox-ykatfxjf",
     "attachment": "FaceCenter",
     "default": {
       "x": 2,
@@ -76,7 +76,7 @@
     }
   },
   "frostbite-skull-roblox-w5db1xj7.glb": {
-    "label": "Mặt Frostbite Skull",
+    "label": "frostbite-skull-roblox-w5db1xj7",
     "attachment": "FaceCenter",
     "default": {
       "x": 2,
@@ -113,7 +113,7 @@
     }
   },
   "sinister-clown-mask-roblox-tb9y0vbh.glb": {
-    "label": "Mặt Sinister Clown Mask",
+    "label": "sinister-clown-mask-roblox-tb9y0vbh",
     "attachment": "FaceCenter",
     "default": {
       "x": 2,
@@ -150,48 +150,9 @@
       "scale": 1.74
     }
   },
-  "sleek-classic-cap-roblox-3glaj7ba.glb": {
-    "label": "Sleek Classic Cap Roblox 3Glaj7Ba",
-    "attachment": "FaceCenter",
-    "default": {
-      "x": 0,
-      "y": 460,
-      "z": -12,
-      "rx": -4,
-      "ry": 115,
-      "scale": 1.16,
-      "rz": 0
-    },
-    "man": {
-      "x": -291,
-      "y": 923,
-      "z": -559,
-      "rx": 0,
-      "ry": 90,
-      "rz": 0,
-      "scale": 3.12
-    },
-    "woman": {
-      "x": -2,
-      "y": 122,
-      "z": 2,
-      "rx": -7,
-      "ry": 115,
-      "scale": 1.16,
-      "rz": 0
-    },
-    "rounded": {
-      "x": 2,
-      "y": 171,
-      "z": -9,
-      "rx": -6,
-      "ry": 119,
-      "scale": 1.12,
-      "rz": 0
-    }
-  },
+
   "abstract-monet-sunglasses-roblox-i41hgpsw.glb": {
-    "label": "Abstract Monet Sunglasses Roblox I41Hgpsw",
+    "label": "abstract-monet-sunglasses-roblox-i41hgpsw",
     "attachment": "FaceCenter",
     "default": {
       "x": 0,
@@ -230,126 +191,7 @@
       "scale": 1.34
     }
   },
-  "bombos-arrow-roblox-v3o5n5i1.glb": {
-    "label": "Bombos Arrow Roblox V3O5N5I1",
-    "attachment": "FaceCenter",
-    "default": {
-      "x": 0,
-      "y": 460,
-      "z": -12,
-      "rx": -4,
-      "ry": 115,
-      "scale": 1.16,
-      "rz": 0
-    },
-    "man": {
-      "x": -290,
-      "y": 874,
-      "z": -596,
-      "rx": 0,
-      "ry": 117,
-      "scale": 1.03,
-      "rz": 0
-    },
-    "woman": {
-      "x": -2,
-      "y": 122,
-      "z": 2,
-      "rx": -7,
-      "ry": 115,
-      "scale": 1.16,
-      "rz": 0
-    },
-    "rounded": {
-      "x": 2,
-      "y": 171,
-      "z": -9,
-      "rx": -6,
-      "ry": 119,
-      "scale": 1.12,
-      "rz": 0
-    }
-  },
-  "cartoon-blast-rifle-roblox-4lb569l5.glb": {
-    "label": "Cartoon Blast Rifle Roblox 4Lb569L5",
-    "attachment": "FaceCenter",
-    "default": {
-      "x": 0,
-      "y": 460,
-      "z": -12,
-      "rx": -4,
-      "ry": 115,
-      "scale": 1.16,
-      "rz": 0
-    },
-    "man": {
-      "x": -290,
-      "y": 874,
-      "z": -596,
-      "rx": 0,
-      "ry": 117,
-      "scale": 1.03,
-      "rz": 0
-    },
-    "woman": {
-      "x": -2,
-      "y": 122,
-      "z": 2,
-      "rx": -7,
-      "ry": 115,
-      "scale": 1.16,
-      "rz": 0
-    },
-    "rounded": {
-      "x": 2,
-      "y": 171,
-      "z": -9,
-      "rx": -6,
-      "ry": 119,
-      "scale": 1.12,
-      "rz": 0
-    }
-  },
-  "frosted-winter-scythe-roblox-zgbus9vh.glb": {
-    "label": "Frosted Winter Scythe Roblox Zgbus9Vh",
-    "attachment": "FaceCenter",
-    "default": {
-      "x": 0,
-      "y": 460,
-      "z": -12,
-      "rx": -4,
-      "ry": 115,
-      "scale": 1.16,
-      "rz": 0
-    },
-    "man": {
-      "x": -290,
-      "y": 874,
-      "z": -596,
-      "rx": 0,
-      "ry": 117,
-      "scale": 1.03,
-      "rz": 0
-    },
-    "woman": {
-      "x": -2,
-      "y": 122,
-      "z": 2,
-      "rx": -7,
-      "ry": 115,
-      "scale": 1.16,
-      "rz": 0
-    },
-    "rounded": {
-      "x": 2,
-      "y": 171,
-      "z": -9,
-      "rx": -6,
-      "ry": 119,
-      "scale": 1.12,
-      "rz": 0
-    }
-  },
+
   "pink-sparkle-shutter-shades-roblox-6eja9dq0.glb": {
     "label": "Pink Sparkle Shutter Shades Roblox 6Eja9Dq0",
     "attachment": "FaceCenter",
@@ -550,86 +392,8 @@
       "scale": 2.29
     }
   },
-  "frostbite-skull-roblox-w5db1xj7 (1).glb": {
-    "label": "Frostbite Skull Roblox W5Db1Xj7 (1)",
-    "attachment": "FaceCenter",
-    "default": {
-      "x": 0,
-      "y": 446,
-      "z": -45,
-      "rx": 0,
-      "ry": 107,
-      "rz": 0,
-      "scale": 1.72
-    },
-    "man": {
-      "x": -291,
-      "y": 868,
-      "z": -625,
-      "rx": 9,
-      "ry": 107,
-      "rz": 0,
-      "scale": 1.83
-    },
-    "woman": {
-      "x": 0,
-      "y": 108,
-      "z": -35,
-      "rx": 0,
-      "ry": 107,
-      "rz": 0,
-      "scale": 1.7
-    },
-    "rounded": {
-      "x": -1,
-      "y": 156,
-      "z": -49,
-      "rx": -6,
-      "ry": 110,
-      "rz": 0,
-      "scale": 1.57
-    }
-  },
-  "sleek-modern-gear-roblox-e5k04b8o.glb": {
-    "label": "Sleek Modern Gear Roblox E5K04B8O",
-    "attachment": "FaceCenter",
-    "default": {
-      "x": 0,
-      "y": 460,
-      "z": -12,
-      "rx": -4,
-      "ry": 117,
-      "rz": 0,
-      "scale": 1.16
-    },
-    "man": {
-      "x": -290,
-      "y": 886,
-      "z": -587,
-      "rx": 1,
-      "ry": 89,
-      "rz": 0,
-      "scale": 2.26
-    },
-    "woman": {
-      "x": 1,
-      "y": 122,
-      "z": 6,
-      "rx": 0,
-      "ry": 88,
-      "rz": 0,
-      "scale": 2.23
-    },
-    "rounded": {
-      "x": 2,
-      "y": 171,
-      "z": 6,
-      "rx": 0,
-      "ry": 88,
-      "rz": 0,
-      "scale": 2.59
-    }
-  },
+
+ 
   "vibrant-joker-mask-roblox-v7vj90c9.glb": {
     "label": "Vibrant Joker Mask Roblox V7Vj90C9",
     "attachment": "FaceCenter",
@@ -638,18 +402,16 @@
       "y": 460,
       "z": -12,
       "rx": -4,
-      "ry": 117,
-      "rz": 0,
-      "scale": 1.16
+      "ry": 90,
+      "scale": 2.32
     },
     "man": {
       "x": -290,
       "y": 874,
       "z": -596,
       "rx": 0,
-      "ry": 117,
-      "scale": 1.03,
-      "rz": 0
+      "ry": 90,
+      "scale": 1.98
     },
     "woman": {
       "x": 0,

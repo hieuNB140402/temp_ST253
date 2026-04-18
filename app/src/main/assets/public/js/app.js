@@ -418,6 +418,7 @@ async function loadAccessoryConfigs() {
     }
 
     populateAccessoryButtons();
+
   } catch (err) {
     console.warn("Accessory Config error:", err.message);
     const list = document.getElementById("hair-list");
@@ -1003,29 +1004,29 @@ function onAvatarLoaded(obj, isOBJ = false, pantsMaxY = null, headMinY = null) {
   // Demo textures — chỉ load lần đầu (khi chưa có outfit nào)
   if (!currentShirtTexture && !currentPantsTexture && !currentFaceTexture) {
     const demoLoader = new THREE.TextureLoader();
-//    demoLoader.load(
-//      "image/shirts/1.png",
-//      (tex) => {
-//        tex.colorSpace = THREE.SRGBColorSpace;
-//        tex.flipY = false;
-//        currentShirtTexture = tex;
-//        applyClothingTexture("shirt", tex);
-//      },
-//      undefined,
-//      (e) => console.warn("Demo shirt failed", e),
-//    );
+    demoLoader.load(
+      "image/shirts/1.png",
+      (tex) => {
+        tex.colorSpace = THREE.SRGBColorSpace;
+        tex.flipY = false;
+        currentShirtTexture = tex;
+        applyClothingTexture("shirt", tex);
+      },
+      undefined,
+      (e) => console.warn("Demo shirt failed", e),
+    );
 
-//    demoLoader.load(
-//      "image/pants/1.png",
-//      (tex) => {
-//        tex.colorSpace = THREE.SRGBColorSpace;
-//        tex.flipY = false;
-//        currentPantsTexture = tex;
-//        applyClothingTexture("pants", tex);
-//      },
-//      undefined,
-//      (e) => console.warn("Demo pants failed", e),
-//    );
+    demoLoader.load(
+      "image/pants/1.png",
+      (tex) => {
+        tex.colorSpace = THREE.SRGBColorSpace;
+        tex.flipY = false;
+        currentPantsTexture = tex;
+        applyClothingTexture("pants", tex);
+      },
+      undefined,
+      (e) => console.warn("Demo pants failed", e),
+    );
 
     // Demo face
     demoLoader.load(
@@ -1042,105 +1043,41 @@ function onAvatarLoaded(obj, isOBJ = false, pantsMaxY = null, headMinY = null) {
   }
 
   // Reload tất cả phụ kiện đang active với tọa độ của nhân vật mới
-  if (activeAccessories.hair) {
-    const filename = activeAccessories.hair;
-    const config = accessoryConfigMap[filename];
-    clearAccessoryByCategory("hair", false);
+  Object.keys(activeAccessories).forEach((category) => {
+    const value = activeAccessories[category];
+    if (!value) return;
+
+    const meta = ACCESSORY_CATEGORY_MAP[category] || {
+      path: "image/" + category + "/",
+      attachment: "Head",
+    };
+
+    const filename = value.split("/").pop();
+    let config = null;
+    if (category === "hair") config = accessoryConfigMap[filename];
+    else if (category === "glasses") config = glassesConfigMap[filename];
+    else if (category === "wing") config = wingConfigMap[filename];
+    else if (category === "neck") config = neckConfigMap[filename];
+    else if (category === "righthand") config = righthandConfigMap[filename];
+    else if (category === "lefthand") config = lefthandConfigMap[filename];
+    else if (category === "shoulder") config = shoulderConfigMap[filename];
+    else if (category === "hat") config = hatConfigMap[filename];
+    else if (category === "waist") config = waistConfigMap[filename];
+
+    clearAccessoryByCategory(category, false);
+
+    // ƯU TIÊN URL NGOÀI: Nếu value không có http, thì ghép với meta.path (URL ngoài)
+    const fullUrl = value.startsWith("http") ? value : meta.path + value;
+
+    console.log(`[Reload Accessory] ${category}: ${fullUrl}`);
+
     loadAccessoryFromFile(
-      "image/hair/" + filename,
-      "hair",
-      (config && config.attachment) || "Head",
+      fullUrl,
+      category,
+      (config && config.attachment) || meta.attachment || "Head",
       config,
     );
-  }
-  if (activeAccessories.glasses) {
-    const filename = activeAccessories.glasses;
-    const config = glassesConfigMap[filename];
-    clearAccessoryByCategory("glasses", false);
-    loadAccessoryFromFile(
-      "image/glasses/" + filename,
-      "glasses",
-      (config && config.attachment) || "FaceCenter",
-      config,
-    );
-  }
-  if (activeAccessories.wing) {
-    const filename = activeAccessories.wing;
-    const config = wingConfigMap[filename];
-    clearAccessoryByCategory("wing", false);
-    loadAccessoryFromFile(
-      "image/wing/" + filename,
-      "wing",
-      (config && config.attachment) || "BodyBack",
-      config,
-    );
-  }
-  if (activeAccessories.neck) {
-    const filename = activeAccessories.neck;
-    const config = neckConfigMap[filename];
-    clearAccessoryByCategory("neck", false);
-    loadAccessoryFromFile(
-      "image/neck/" + filename,
-      "neck",
-      (config && config.attachment) || "Neck",
-      config,
-    );
-  }
-  if (activeAccessories.righthand) {
-    const filename = activeAccessories.righthand;
-    const config = righthandConfigMap[filename];
-    clearAccessoryByCategory("righthand", false);
-    loadAccessoryFromFile(
-      "image/righthand/" + filename,
-      "righthand",
-      (config && config.attachment) || "RightGrip",
-      config,
-    );
-  }
-  if (activeAccessories.lefthand) {
-    const filename = activeAccessories.lefthand;
-    const config = lefthandConfigMap[filename];
-    clearAccessoryByCategory("lefthand", false);
-    loadAccessoryFromFile(
-      "image/lefthand/" + filename,
-      "lefthand",
-      (config && config.attachment) || "LeftGrip",
-      config,
-    );
-  }
-  if (activeAccessories.shoulder) {
-    const filename = activeAccessories.shoulder;
-    const config = shoulderConfigMap[filename];
-    clearAccessoryByCategory("shoulder", false);
-    loadAccessoryFromFile(
-      "image/shoulder/" + filename,
-      "shoulder",
-      (config && config.attachment) || "LeftShoulder",
-      config,
-    );
-  }
-  if (activeAccessories.hat) {
-    const filename = activeAccessories.hat;
-    const config = hatConfigMap[filename];
-    clearAccessoryByCategory("hat", false);
-    loadAccessoryFromFile(
-      "image/hat/" + filename,
-      "hat",
-      (config && config.attachment) || "Hat",
-      config,
-    );
-  }
-  if (activeAccessories.waist) {
-    const filename = activeAccessories.waist;
-    const config = waistConfigMap[filename];
-    clearAccessoryByCategory("waist", false);
-    loadAccessoryFromFile(
-      "image/waist/" + filename,
-      "waist",
-      (config && config.attachment) || "WaistCenter",
-      config,
-    );
-  }
+  });
 }
 
 // ── fitModel: scale bất kỳ model về 1.8 world units và căn giữa ──────────────────
@@ -1372,7 +1309,7 @@ function updateCompositeTexture() {
   }
 
   // Clear with skin background
-  compositeCtx.fillStyle = "#bfc5d1";
+  compositeCtx.fillStyle = "#ffffff";
   compositeCtx.fillRect(0, 0, 1024, 1024);
 
   const drawMaps = (img, mappings) => {
@@ -1418,7 +1355,7 @@ function updateFaceTexture() {
   }
 
   // Màu nền da mặc định
-  faceCtx.fillStyle = "#dfe3e6";
+  faceCtx.fillStyle = "#ffffff";
   faceCtx.fillRect(0, 0, faceCanvas.width, faceCanvas.height);
 
   if (currentFaceTexture && currentFaceTexture.image) {
@@ -2548,11 +2485,26 @@ window.updateTheme = function (mode) {
   if (dirLight) dirLight.intensity = theme.lightIntensity;
 
 };
+// Xóa toàn bộ phụ kiện đang mặc
+window.clearAllAccessories = function () {
+  Object.keys(activeAccessories).forEach((category) => {
+    clearAccessoryByCategory(category);
+  });
+  console.log("[WebView] All accessories cleared.");
+};
+
 //Hàm nhận mảng phụ kiện từ Kotlin
 window.setAccessories = function (data, charId = null) {
+  // 1. Xóa toàn bộ phụ kiện cũ trước khi nạp mới
+  window.clearAllAccessories();
+
   let dataList = data;
-  if (typeof data === 'string') {
-    try { dataList = JSON.parse(data); } catch(e) { return; }
+  if (typeof data === "string") {
+    try {
+      dataList = JSON.parse(data);
+    } catch (e) {
+      return;
+    }
   }
   if (!Array.isArray(dataList)) return;
 
@@ -2561,12 +2513,10 @@ window.setAccessories = function (data, charId = null) {
     const meta = ACCESSORY_CATEGORY_MAP[key];
 
     if (meta && value) {
-      // 1. Xóa phụ kiện cũ cùng loại trước khi thêm mới
-      clearAccessoryByCategory(key);
       activeAccessories[key] = value;
 
       // 2. Tải phụ kiện mới với tọa độ chuẩn của nhân vật được chỉ định
-      const fullUrl = value.startsWith("http") ? value : (meta.path + value);
+      const fullUrl = value.startsWith("http") ? value : meta.path + value;
       loadAccessoryFromFile(fullUrl, key, meta.attachment, null, charId);
     }
   });
@@ -2591,8 +2541,7 @@ window.setItems = function (dataList, charId = null) {
     window.loadOutfit(clothingConfig, false);
   }
 
-  // 2. Áp dụng phụ kiện 3D (nếu có)
-  if (accessoryTasks.length > 0) {
-    window.setAccessories(accessoryTasks, charId);
-  }
+  // 2. Áp dụng phụ kiện 3D
+  // Luôn gọi để đảm bảo logic xóa phụ kiện cũ (clearAllAccessories) được thực thi
+  window.setAccessories(accessoryTasks, charId);
 };

@@ -17,7 +17,7 @@ class ClothesAdapter : BaseAdapter<SelectedModel, ItemChooseClothesAccessoryBind
         binding.apply {
             vFocus.isVisible = item.isSelected
             val domain = if (DataLocal.isFailBaseURL) DomainKey.BASE_URL_PREVENTIVE else DomainKey.BASE_URL
-            loadImage("$domain/${DomainKey.SUB_DOMAIN}/${item.path}", imvImage)
+            loadImage("$domain${DomainKey.SUB_DOMAIN}/${item.path}", imvImage)
 
             root.tap {
                 selectItem(position)

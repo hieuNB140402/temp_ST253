@@ -8,6 +8,7 @@ class App : Application() {
     val sharePreference by lazy { SharePreferenceHelper(this) }
     val shirtListDefault = ArrayList<String>()
     val pantListDefault = ArrayList<String>()
+    val comboListDefault = ArrayList<String>()
 
     fun reupdateShirtListDefault(list: List<String>) {
         shirtListDefault.clear()
@@ -17,6 +18,11 @@ class App : Application() {
     fun reupdatePantListDefault(list: List<String>) {
         pantListDefault.clear()
         pantListDefault.addAll(list)
+    }
+
+    fun reupdateComboListDefault(list: List<String>) {
+        comboListDefault.clear()
+        comboListDefault.addAll(list)
     }
 
 

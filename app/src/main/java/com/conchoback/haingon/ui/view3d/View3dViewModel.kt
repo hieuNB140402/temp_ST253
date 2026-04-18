@@ -18,7 +18,7 @@ import com.conchoback.haingon.core.utils.key.AssetsKey
 import com.conchoback.haingon.core.utils.key.DomainKey
 import com.conchoback.haingon.core.utils.key.IntentKey
 import com.conchoback.haingon.core.utils.key.ValueKey
-import com.conchoback.haingon.data.model.AccessoryModel
+import com.conchoback.haingon.data.model.clothes.AccessoryModel
 import com.conchoback.haingon.data.model.clothes.ClothesModel
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
@@ -188,7 +188,7 @@ class View3dViewModel : ViewModel() {
         }
     }
 
-    fun convertFromJsonAccessory(clothesSelected: String) : List<AccessoryModel> {
+    fun convertFromJsonAccessory(clothesSelected: String): List<AccessoryModel> {
         val type = object : TypeToken<List<AccessoryModel>>() {}.type
         val list: List<AccessoryModel> = Gson().fromJson(clothesSelected, type)
         return list
@@ -201,7 +201,7 @@ class View3dViewModel : ViewModel() {
             // api
             imagePath.contains(DomainKey.SPECIAL_CATEGORY) -> {
                 val domain = if (DataLocal.isFailBaseURL) DomainKey.BASE_URL_PREVENTIVE else DomainKey.BASE_URL
-                "$domain/${DomainKey.SUB_DOMAIN}/${imagePath}"
+                "$domain${DomainKey.SUB_DOMAIN}/${imagePath}"
             }
             // asset
             else -> "${AssetsKey.DOMAIN_ASSET_WEBVIEW}/$imagePath"
@@ -223,6 +223,26 @@ class View3dViewModel : ViewModel() {
         }
     }
 
+    fun loadComboPath(path: String): Pair<String, String> {
+        return if (path.contains(AssetsKey.COMBO_ASSET)) {
+            val fileName = path.split("/").last()
+            val shirtPath = "${AssetsKey.SHIRT_COMBO}/$fileName"
+            val pantPath = "${AssetsKey.SHIRT_COMBO}/$fileName"
+
+            shirtPath to pantPath
+        } else {
+            path to path
+        }
+    }
+
+    fun handleSave(){
+        when(typeClothes.value){
+            ValueKey.SHIRT -> {
+
+            }
+        }
+
+    }
     // Webview Function
     //==================================================================================================================
     fun updateTheme(theme: String): String {
@@ -250,11 +270,13 @@ class View3dViewModel : ViewModel() {
         val jsonList = accessoryList.map {
             AccessoryModel(
                 key = it.key,
-                value =  "$domain/${DomainKey.SUB_DOMAIN}/${DomainKey.PREVIEW_3D}/${it.value}.glb"
+                value = "$domain${DomainKey.SUB_DOMAIN}/${DomainKey.PREVIEW_3D}/${it.value}.glb"
             )
         }
+        // [key ="", value =""]
 
         val json = Gson().toJson(jsonList)
+
         return "window.setAccessories('$json')"
     }
 }

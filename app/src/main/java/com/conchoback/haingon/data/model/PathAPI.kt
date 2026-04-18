@@ -13,6 +13,7 @@ data class ClothesAPI(
 data class AccessoryAPI(
     val glasses: List<String>,
     val hair: List<String>,
+    val hat: List<String>,
     val lefthand: List<String>,
     val neck: List<String>,
     val righthand: List<String>,

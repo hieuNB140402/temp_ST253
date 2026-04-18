@@ -11,6 +11,7 @@ import com.conchoback.haingon.core.custom.drawview.DrawView
 import com.conchoback.haingon.core.helper.AssetHelper
 import com.conchoback.haingon.core.helper.BitmapHelper
 import com.conchoback.haingon.core.helper.MediaHelper
+import com.conchoback.haingon.core.utils.DataLocal
 import com.conchoback.haingon.core.utils.key.AssetsKey
 import com.conchoback.haingon.core.utils.key.DomainKey
 import com.conchoback.haingon.core.utils.key.ValueKey
@@ -112,13 +113,23 @@ class CustomViewModel : ViewModel() {
     }.flowOn(Dispatchers.IO)
 
     fun fullDomainImage(context: Context, image: String): String {
-        return if (image.contains(ValueKey.TEMP_ALBUM)) {
-            // Internal
-            val file = File(context.filesDir, image)
-            file.absolutePath
-        } else {
-            // Asset
-            "${AssetsKey.ASSET_MANAGER}/$image"
+        return when {
+            image.contains(ValueKey.TEMP_ALBUM) -> {
+                // Internal
+                val file = File(context.filesDir, image)
+                file.absolutePath
+            }
+
+            image.contains(DomainKey.SPECIAL_CATEGORY) -> {
+                // api
+                val domain = if (DataLocal.isFailBaseURL) DomainKey.BASE_URL_PREVENTIVE else DomainKey.BASE_URL
+                "${domain}/${DomainKey.SUB_DOMAIN}/$image"
+            }
+
+            else -> {
+                // Asset
+                "${AssetsKey.ASSET_MANAGER}/$image"
+            }
         }
     }
 

@@ -1,6 +1,6 @@
 {
   "mystic-green-helmet-roblox-40pgked5.glb": {
-    "label": "Mũ mystic green helmet",
+    "label": "mystic-green-helmet-roblox-40pgked5",
     "attachment": "Hat",
     "default": {
       "x": 0,
@@ -37,7 +37,7 @@
     }
   },
   "crimson-antler-helmet-roblox-te1xh5xq.glb": {
-    "label": "Mũ crimson antler helmet",
+    "label": "crimson-antler-helmet-roblox-te1xh5xq",
     "attachment": "Head",
     "default": {
       "x": 0,
@@ -74,7 +74,7 @@
     }
   },
   "celestial-winged-helm-roblox-uxgjz0es.glb": {
-    "label": "Mũ celestial winged helm",
+    "label": "celestial-winged-helm-roblox-uxgjz0es",
     "attachment": "Head",
     "default": {
       "x": 0,
@@ -111,7 +111,7 @@
     }
   },
   "spiked-emo-cap-roblox-99c5njap.glb": {
-    "label": "Mũ spiked emo cap",
+    "label": "spiked-emo-cap-roblox-99c5njap",
     "attachment": "Head",
     "default": {
       "x": 0,
@@ -148,7 +148,7 @@
     }
   },
   "gooey-tongue-hat-roblox-k1tlo1bz.glb": {
-    "label": "Gooey Tongue Hat Roblox K1Tlo1Bz",
+    "label": "gooey-tongue-hat-roblox-k1tlo1bz",
     "attachment": "Hat",
     "default": {
       "x": 0,
@@ -187,204 +187,40 @@
       "rz": 0
     }
   },
-  "kawaii-pink-helmet-roblox-847lowgq.glb": {
-    "label": "Kawaii Pink Helmet Roblox 847Lowgq",
-    "attachment": "Hat",
-    "default": {
-      "x": 0,
-      "y": 459,
-      "z": -11,
-      "rx": 2,
-      "ry": 48,
-      "scale": 2.69,
-      "rz": 0
-    },
-    "man": {
-      "x": -290,
-      "y": 871,
-      "z": -616,
-      "rx": 2,
-      "ry": 53,
-      "scale": 2.69,
-      "rz": 0
-    },
-    "woman": {
-      "x": 0,
-      "y": 191,
-      "z": -5,
-      "rx": 0,
-      "ry": 55,
-      "rz": 0,
-      "scale": 1.51
-    },
-    "rounded": {
-      "x": -2,
-      "y": 227,
-      "z": 4,
-      "rx": 5,
-      "ry": 57,
-      "rz": 0,
-      "scale": 1.52
-    }
-  },
-  "mechanical-clockwork-headphones-roblox-1y1r4u6q.glb": {
-    "label": "Mechanical Clockwork Headphones Roblox 1Y1R4U6Q",
-    "attachment": "Hat",
-    "default": {
-      "x": 0,
-      "y": 459,
-      "z": -11,
-      "rx": 2,
-      "ry": 48,
-      "scale": 2.69,
-      "rz": 0
-    },
-    "man": {
-      "x": -290,
-      "y": 871,
-      "z": -616,
-      "rx": 2,
-      "ry": 53,
-      "scale": 2.69,
-      "rz": 0
-    },
-    "woman": {
-      "x": 0,
-      "y": 169,
-      "z": 6,
-      "rx": 7,
-      "ry": 125,
-      "rz": 0,
-      "scale": 1.95
-    },
-    "rounded": {
-      "x": -1,
-      "y": 193,
-      "z": 4,
-      "rx": 5,
-      "ry": 129,
-      "rz": 0,
-      "scale": 1.89
-    }
-  },
-  "radiant-saiyan-wings-roblox-21e6937f.glb": {
-    "label": "Radiant Saiyan Wings Roblox 21E6937F",
-    "attachment": "Hat",
-    "default": {
-      "x": 0,
-      "y": 459,
-      "z": -11,
-      "rx": 2,
-      "ry": 48,
-      "scale": 2.69,
-      "rz": 0
-    },
-    "man": {
-      "x": -290,
-      "y": 871,
-      "z": -616,
-      "rx": 2,
-      "ry": 53,
-      "scale": 2.69,
-      "rz": 0
-    },
-    "woman": {
-      "x": 0,
-      "y": 114,
-      "z": -30,
-      "rx": 7,
-      "ry": 50,
-      "scale": 2.55,
-      "rz": 0
-    },
-    "rounded": {
-      "x": 3,
-      "y": 234,
-      "z": -14,
-      "rx": 3,
-      "ry": 108,
-      "rz": 0,
-      "scale": 2.78
-    }
-  },
-  "whimsical-cat-ears-hat-roblox-a36dp3ey.glb": {
-    "label": "Whimsical Cat Ears Hat Roblox A36Dp3Ey",
-    "attachment": "Hat",
-    "default": {
-      "x": 0,
-      "y": 459,
-      "z": -11,
-      "rx": 2,
-      "ry": 48,
-      "scale": 2.69,
-      "rz": 0
-    },
-    "man": {
-      "x": -290,
-      "y": 871,
-      "z": -616,
-      "rx": 2,
-      "ry": 53,
-      "scale": 2.69,
-      "rz": 0
-    },
-    "woman": {
-      "x": 0,
-      "y": 114,
-      "z": -30,
-      "rx": 7,
-      "ry": 50,
-      "scale": 2.55,
-      "rz": 0
-    },
-    "rounded": {
-      "x": 2,
-      "y": 214,
-      "z": 4,
-      "rx": 5,
-      "ry": 118,
-      "rz": 0,
-      "scale": 2.1
-    }
-  },
   "stellar-pink-headphones-roblox-ktwjim0w.glb": {
     "label": "Stellar Pink Headphones Roblox Ktwjim0W",
     "attachment": "Hat",
     "default": {
       "x": 0,
-      "y": 459,
-      "z": -11,
-      "rx": 2,
-      "ry": 48,
-      "scale": 2.69,
-      "rz": 0
+      "y": 396,
+      "z": -33,
+      "rx": 63,
+      "ry": 43,
+      "scale": 2.06
     },
     "man": {
       "x": -290,
-      "y": 871,
-      "z": -616,
-      "rx": 2,
-      "ry": 53,
-      "scale": 2.69,
-      "rz": 0
+      "y": 830,
+      "z": -605,
+      "rx": 80,
+      "ry": 42,
+      "scale": 1.82
     },
     "woman": {
       "x": 0,
-      "y": 114,
+      "y": 46,
       "z": -30,
-      "rx": 7,
-      "ry": 50,
-      "scale": 2.55,
-      "rz": 0
+      "rx": 62,
+      "ry": 42,
+      "scale": 1.46
     },
     "rounded": {
       "x": 1,
-      "y": 179,
-      "z": -19,
-      "rx": 5,
-      "ry": 54,
-      "rz": 0,
-      "scale": 1.97
+      "y": 92,
+      "z": -18,
+      "rx": 66,
+      "ry": 42,
+      "scale": 1.74
     }
   },
   "cmc.glb": {
@@ -409,22 +245,20 @@
       "scale": 1.2
     },
     "woman": {
-      "x": 0,
-      "y": 114,
-      "z": -30,
+      "x": -12,
+      "y": 129,
+      "z": -4,
       "rx": 7,
-      "ry": 50,
-      "scale": 2.55,
-      "rz": 0
+      "ry": -180,
+      "scale": 1.42
     },
     "rounded": {
-      "x": 1,
-      "y": 179,
-      "z": -19,
+      "x": -13,
+      "y": 175,
+      "z": 2,
       "rx": 5,
-      "ry": 54,
-      "rz": 0,
-      "scale": 1.97
+      "ry": -180,
+      "scale": 1.43
     }
   }
 }

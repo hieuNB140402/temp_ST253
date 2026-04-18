@@ -12,9 +12,6 @@ object ValueKey {
     const val LIGHT_THEME = "light"
 
 
-    const val PREVIEW_VIEW = 0
-    const val CREATION_VIEW = 1
-
     const val NONE_OPTION = -1
     const val IMAGE_OPTION = 0
     const val BRUSH_OPTION = 1
@@ -23,8 +20,8 @@ object ValueKey {
     const val TEXT_OPTION = 4
 
 
-    const val BASIC_SKIN = 0
-    const val ADVANCED_SKIN = 1
+    const val BASIC_SKIN = "BASIC_SKIN"
+    const val SPECIAL_SKIN = "SPECIAL_SKIN"
 
     const val SIZE_PROGRESS_DEFAULT = 50
 
@@ -43,6 +40,7 @@ object ValueKey {
     //============================================================================================================================
     const val GLASSES_SUB_ACCESSORY= "glasses"
     const val HAIR_SUB_ACCESSORY= "hair"
+    const val HAT_SUB_ACCESSORY= "hat"
     const val LEFTHAND_SUB_ACCESSORY= "lefthand"
     const val NECK_SUB_ACCESSORY= "neck"
     const val RIGHTHAND_SUB_ACCESSORY= "righthand"

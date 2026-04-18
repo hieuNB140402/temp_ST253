@@ -23,7 +23,7 @@ import com.conchoback.haingon.core.extension.visible
 import com.conchoback.haingon.core.helper.InternetHelper
 import com.conchoback.haingon.core.utils.key.IntentKey
 import com.conchoback.haingon.core.utils.key.ValueKey
-import com.conchoback.haingon.data.model.AccessoryModel
+import com.conchoback.haingon.data.model.clothes.AccessoryModel
 import com.conchoback.haingon.data.model.clothes.ClothesModel
 import com.conchoback.haingon.databinding.ActivityView3dBinding
 import com.conchoback.haingon.ui.custom.CustomActivity
@@ -201,9 +201,10 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
                 btnPant.visible()
                 btnAccessory.gone()
 
+                val (shirtPath, pantPath) = viewModel.loadComboPath(pathClothes)
                 viewModel.apply {
-                    dispatch(View3dAction.ChangeShirt(ClothesModel(ValueKey.SHIRT, pathClothes)))
-                    dispatch(View3dAction.ChangePant(ClothesModel(ValueKey.PANT, pathClothes)))
+                    dispatch(View3dAction.ChangeShirt(ClothesModel(ValueKey.SHIRT, shirtPath)))
+                    dispatch(View3dAction.ChangePant(ClothesModel(ValueKey.PANT, pantPath)))
                 }
             }
 
@@ -218,7 +219,6 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
                     dispatch(View3dAction.ChangePant(ClothesModel(ValueKey.PANT, pathClothesDefault)))
                     dispatch(View3dAction.ChangeAccessory(viewModel.convertFromJsonAccessory(pathClothes)))
                 }
-
             }
 
             else -> return@with
@@ -267,6 +267,7 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
 
     private fun renderAccessories(list: List<AccessoryModel>) {
         binding.webView.evaluateJavascript(viewModel.updateAccessory(list), null)
+//        binding.webView.evaluateJavascript(viewModel.updateAccessory(list), null)
         dLog("Accessories: $list")
     }
 

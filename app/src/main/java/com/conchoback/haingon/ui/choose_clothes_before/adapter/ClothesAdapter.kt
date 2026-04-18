@@ -5,7 +5,9 @@ import com.conchoback.haingon.core.extension.dLog
 import com.conchoback.haingon.core.extension.gone
 import com.conchoback.haingon.core.extension.loadImage
 import com.conchoback.haingon.core.extension.tap
+import com.conchoback.haingon.core.utils.DataLocal
 import com.conchoback.haingon.core.utils.key.AssetsKey
+import com.conchoback.haingon.core.utils.key.DomainKey
 import com.conchoback.haingon.databinding.ItemChooseClothesAccessoryBinding
 
 class ClothesAdapter :
@@ -15,9 +17,18 @@ class ClothesAdapter :
     override fun onBind(binding: ItemChooseClothesAccessoryBinding, item: String, position: Int) {
         binding.apply {
             vFocus.gone()
-            dLog("${AssetsKey.ASSET_MANAGER}/$item")
-            loadImage("${AssetsKey.ASSET_MANAGER}/$item", imvImage)
 
+            val domain = if (item.contains(DomainKey.SPECIAL_CATEGORY)){
+                val domain = if (DataLocal.isFailBaseURL) DomainKey.BASE_URL_PREVENTIVE else DomainKey.BASE_URL
+                "$domain${DomainKey.SUB_DOMAIN}"
+            }else{
+                AssetsKey.ASSET_MANAGER
+            }
+            val path = "$domain/$item"
+
+            dLog("path[$position]: $path")
+
+            loadImage(path, imvImage)
 
             root.tap { onItemClick.invoke(item) }
         }

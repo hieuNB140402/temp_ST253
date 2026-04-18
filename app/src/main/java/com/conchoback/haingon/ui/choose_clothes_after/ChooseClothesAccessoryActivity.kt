@@ -14,7 +14,7 @@ import com.conchoback.haingon.core.extension.visible
 import com.conchoback.haingon.core.helper.InternetHelper
 import com.conchoback.haingon.core.utils.key.IntentKey
 import com.conchoback.haingon.core.utils.key.ValueKey
-import com.conchoback.haingon.data.model.AccessoryModel
+import com.conchoback.haingon.data.model.clothes.AccessoryModel
 import com.conchoback.haingon.data.model.PathAPI
 import com.conchoback.haingon.databinding.ActivityChooseClothesAccessoryBinding
 import com.conchoback.haingon.ui.home.DataViewModel

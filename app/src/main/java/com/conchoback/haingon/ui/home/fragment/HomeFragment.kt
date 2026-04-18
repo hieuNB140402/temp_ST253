@@ -21,6 +21,7 @@ import com.conchoback.haingon.ui.home.HomeActivity
 import com.conchoback.haingon.ui.home.HomeViewModel
 import com.conchoback.haingon.ui.how_to_use.HowToUseActivity
 import com.conchoback.haingon.ui.view3d.View3dActivity
+import com.google.common.collect.Multimaps.index
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     val viewModel: HomeViewModel by activityViewModels()
@@ -36,23 +37,22 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     override fun viewListener() {
         val homeActivity = (activity as HomeActivity)
         binding.apply {
+            btnSpecialClothes.tap { homeActivity.checkInternet { handleComboNextScreen(ValueKey.SPECIAL_SKIN) } }
             btnHowToUse.tap { homeActivity.startIntentRightToLeft(HowToUseActivity::class.java) }
-
             btnAccessory.tap {
                 homeActivity.checkInternet {
-                    homeActivity.startIntentRightToLeft(
-                        ChooseClothesBeforeActivity::class.java,
-                        ValueKey.ACCESSORY
-                    )
+                    homeActivity.startIntentRightToLeft(ChooseClothesBeforeActivity::class.java, ValueKey.ACCESSORY)
                 }
-                btnCombo.tap { homeActivity.startIntentRightToLeft(ChooseClothesBeforeActivity::class.java, ValueKey.COMBO) }
-                btnShirt.tap { homeActivity.startIntentRightToLeft(ChooseClothesBeforeActivity::class.java, ValueKey.SHIRT) }
-                btnPant.tap { homeActivity.startIntentRightToLeft(ChooseClothesBeforeActivity::class.java, ValueKey.PANT) }
-
-                btnTrending1.tap { handleTrending(1) }
-                btnTrending2.tap { handleTrending(2) }
-                btnTrending3.tap { handleTrending(3) }
             }
+
+            btnCombo.tap { handleComboNextScreen(ValueKey.BASIC_SKIN) }
+            btnShirt.tap { homeActivity.startIntentRightToLeft(ChooseClothesBeforeActivity::class.java, ValueKey.SHIRT) }
+            btnPant.tap { homeActivity.startIntentRightToLeft(ChooseClothesBeforeActivity::class.java, ValueKey.PANT) }
+
+            btnTrending1.tap { handleTrending(1) }
+            btnTrending2.tap { handleTrending(2) }
+            btnTrending3.tap { handleTrending(3) }
+
         }
     }
 
@@ -81,6 +81,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         nextScreen.apply {
             putExtra(IntentKey.CLOTHES_TYPE, ValueKey.COMBO)
             putExtra(IntentKey.PATH_KEY, viewModel.getClothesPath(index))
+        }
+        val anim = AnimationHelper.intentAnimRL(requireActivity())
+        startActivity(nextScreen, anim.toBundle())
+    }
+
+    private fun handleComboNextScreen(typeCombo: String) {
+        val nextScreen = Intent(requireActivity(), ChooseClothesBeforeActivity::class.java)
+        nextScreen.apply {
+            putExtra(IntentKey.INTENT_KEY, ValueKey.COMBO)
+            putExtra(IntentKey.COMBO_TYPE, typeCombo)
         }
         val anim = AnimationHelper.intentAnimRL(requireActivity())
         startActivity(nextScreen, anim.toBundle())

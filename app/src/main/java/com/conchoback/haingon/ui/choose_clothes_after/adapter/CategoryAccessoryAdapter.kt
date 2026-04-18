@@ -6,7 +6,7 @@ import com.conchoback.haingon.core.extension.loadImage
 import com.conchoback.haingon.core.extension.tap
 import com.conchoback.haingon.core.utils.DataLocal
 import com.conchoback.haingon.core.utils.key.DomainKey
-import com.conchoback.haingon.data.model.AccessorySelectedModel
+import com.conchoback.haingon.data.model.clothes.AccessorySelectedModel
 import com.conchoback.haingon.databinding.ItemCategoryAccessoryBinding
 
 class CategoryAccessoryAdapter :
@@ -18,7 +18,7 @@ class CategoryAccessoryAdapter :
             vFocus.isVisible = item.isSelected
 
             val domain = if (DataLocal.isFailBaseURL) DomainKey.BASE_URL_PREVENTIVE else DomainKey.BASE_URL
-            val path = "$domain/${DomainKey.SUB_DOMAIN}/${DomainKey.PREVIEW_2D}/${item.thumbnail}.png"
+            val path = "$domain${DomainKey.SUB_DOMAIN}/${DomainKey.PREVIEW_2D}/${item.thumbnail}.png"
 
             loadImage(path, imvImage)
 

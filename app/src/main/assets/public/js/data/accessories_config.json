@@ -1,6 +1,6 @@
 {
   "sleek-cornrow-hair-roblox-r0e4vdom.glb": {
-    "label": "Tóc Cornrow (Sleek)",
+    "label": "sleek-cornrow-hair-roblox-r0e4vdom",
     "attachment": "Head",
     "default": {
       "x": 0,
@@ -37,7 +37,7 @@
     }
   },
   "blazing-ember-hair-roblox-v69px5bw.glb": {
-    "label": "Tóc Blazing Ember",
+    "label": "blazing-ember-hair-roblox-v69px5bw",
     "attachment": "Head",
     "default": {
       "x": 0,
@@ -73,7 +73,7 @@
     }
   },
   "violet-kawaii-cat-ears-roblox-azyn5925.glb": {
-    "label": "Tóc Violet Kawaii Cat Ears",
+    "label": "violet-kawaii-cat-ears-roblox-azyn5925",
     "attachment": "Head",
     "default": {
       "x": 0,
@@ -109,7 +109,7 @@
     }
   },
   "midnight-chaos-hair-roblox-ant5pdbd.glb": {
-    "label": "Tóc Midnight Chaos",
+    "label": "midnight-chaos-hair-roblox-ant5pdbd",
     "attachment": "Head",
     "default": {
       "x": 0,
@@ -145,7 +145,7 @@
     }
   },
   "emerald-goku-face-roblox-yfctcngm.glb": {
-    "label": "Emerald Goku Face Roblox Yfctcngm",
+    "label": "emerald-goku-face-roblox-yfctcngm",
     "attachment": "Head",
     "default": {
       "x": 0,
@@ -558,12 +558,11 @@
     },
     "man": {
       "x": -295,
-      "y": 825,
-      "z": -579,
-      "rx": 0,
-      "ry": 83,
-      "scale": 2.59,
-      "rz": 0
+      "y": 938,
+      "z": -502,
+      "rx": 5,
+      "ry": 88,
+      "scale": 3.49
     },
     "woman": {
       "x": 3,
@@ -736,12 +735,11 @@
     },
     "rounded": {
       "x": 2,
-      "y": 178,
+      "y": 211,
       "z": 2,
       "rx": -6,
       "ry": 103,
-      "rz": 0,
-      "scale": 2.49
+      "scale": 3.02
     }
   },
   "crimson-spiked-horns-roblox-chubyefe.glb": {

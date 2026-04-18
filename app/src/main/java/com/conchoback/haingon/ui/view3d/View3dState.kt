@@ -1,6 +1,6 @@
 package com.conchoback.haingon.ui.view3d
 
-import com.conchoback.haingon.data.model.AccessoryModel
+import com.conchoback.haingon.data.model.clothes.AccessoryModel
 import com.conchoback.haingon.data.model.clothes.ClothesModel
 
 data class View3dState(
