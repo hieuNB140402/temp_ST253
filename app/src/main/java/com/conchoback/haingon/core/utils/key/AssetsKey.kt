@@ -15,6 +15,7 @@ object AssetsKey {
     const val PANT_COMBO = "skin/combo/pant"
 
     const val COMBO_ASSET = "combo"
+    const val BASIC_ASSET = "basic"
 
     const val TRENDING_ASSET = "trending"
     const val IMAGE_ASSET = "image"

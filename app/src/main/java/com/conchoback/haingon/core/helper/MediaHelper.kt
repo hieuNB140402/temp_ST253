@@ -29,9 +29,14 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.net.URL
 import androidx.core.graphics.scale
+import com.conchoback.haingon.core.extension.dLog
+import com.conchoback.haingon.core.extension.eLog
 import com.conchoback.haingon.core.utils.key.AssetsKey
+import com.conchoback.haingon.core.utils.key.DomainKey
 import com.conchoback.haingon.core.utils.state.SaveState
 import kotlinx.coroutines.flow.flowOn
+import java.io.BufferedOutputStream
+import java.io.OutputStream
 
 object MediaHelper {
     // Sort file (folder)
@@ -538,4 +543,225 @@ object MediaHelper {
         }
     }
 
+    suspend fun moveInternalFile(context: Context, fromPath: String, toPath: String): String {
+        return try {
+            val fromFile = File(context.filesDir, fromPath)
+            val toFile = File(context.filesDir, toPath)
+
+            if (!fromFile.exists()) return ""
+
+            // đảm bảo folder đích tồn tại
+            toFile.parentFile?.let {
+                if (!it.exists()) it.mkdirs()
+            }
+
+            // 1. thử rename (nhanh nhất)
+            if (fromFile.renameTo(toFile)) {
+                val abs = toFile.absolutePath
+                val result = abs.substringAfter("/files/")
+                return result
+            }
+
+            // 2. fallback: copy + delete
+            fromFile.inputStream().use { input ->
+                toFile.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+
+            fromFile.delete()
+            val abs = toFile.absolutePath
+            val result = abs.substringAfter("/files/")
+            return result
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ""
+        }
+    }
+
+    suspend fun downloadAllToExternal(
+        context: Context,
+        paths: List<String>,
+        folderName: String
+    ): Boolean = withContext(Dispatchers.IO) {
+
+        val result = mutableListOf<String>()
+
+        paths.forEach { path ->
+            try {
+                val fileName = path.substringAfterLast("/")
+                val finalName = generateUniqueFileName(context, fileName, folderName)
+
+                val outputStream = openOutputStreamSmart(context, finalName, folderName)
+                    ?: return@forEach
+
+                val tempStream = BufferedOutputStream(outputStream)
+
+                when {
+                    path.startsWith(DomainKey.HTTP) -> {
+                        URL(path).openStream().use { input ->
+                            input.copyTo(tempStream)
+                        }
+                    }
+
+                    path.startsWith(AssetsKey.ASSET_MANAGER) -> {
+                        val assetPath = path.removePrefix("${AssetsKey.ASSET_MANAGER}/")
+                        context.assets.open(assetPath).use { input ->
+                            input.copyTo(tempStream)
+                        }
+                    }
+
+                    else -> {
+                        val internalFile = File(path)
+                        if (!internalFile.exists()) return@forEach
+
+                        internalFile.inputStream().use { input ->
+                            input.copyTo(tempStream)
+                        }
+                    }
+                }
+
+                tempStream.flush()
+                tempStream.close()
+
+                result.add(finalName)
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                eLog("Download error: $e")
+            }
+        }
+
+        result.forEachIndexed { index, string ->
+            dLog("Download[$index]: $string")
+        }
+        result.size == paths.size
+    }
+    fun getUniqueFile(file: File): File {
+        if (!file.exists()) return file
+
+        var index = 1
+        val name = file.nameWithoutExtension
+        val ext = file.extension
+
+        var newFile: File
+        do {
+            val newName = if (ext.isNotEmpty()) {
+                "$name($index).$ext"
+            } else {
+                "$name($index)"
+            }
+            newFile = File(file.parent, newName)
+            index++
+        } while (newFile.exists())
+
+        return newFile
+    }
+
+    fun openOutputStreamSmart(
+        context: Context,
+        fileName: String,
+        folderName: String
+    ): OutputStream? {
+
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // Android 10+
+            val resolver = context.contentResolver
+
+            val contentValues = ContentValues().apply {
+                put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                put(MediaStore.MediaColumns.MIME_TYPE, getMimeType(fileName))
+                put(
+                    MediaStore.MediaColumns.RELATIVE_PATH,
+                    "${Environment.DIRECTORY_DOWNLOADS}/$folderName"
+                )
+                put(MediaStore.MediaColumns.IS_PENDING, 1)
+            }
+
+            val uri = resolver.insert(
+                MediaStore.Downloads.EXTERNAL_CONTENT_URI,
+                contentValues
+            ) ?: return null
+
+            val stream = resolver.openOutputStream(uri)
+
+            // mark done
+            contentValues.clear()
+            contentValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
+            resolver.update(uri, contentValues, null, null)
+
+            stream
+
+        } else {
+            // Android 7–9
+            val file = File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                "$folderName/$fileName"
+            )
+
+            file.parentFile?.mkdirs()
+            FileOutputStream(file)
+        }
+    }
+    fun generateUniqueFileName(
+        context: Context,
+        fileName: String,
+        folderName: String
+    ): String {
+
+        var name = fileName
+        var index = 1
+
+        while (fileExists(context, name, folderName)) {
+            val base = fileName.substringBeforeLast(".")
+            val ext = fileName.substringAfterLast(".", "")
+            name = if (ext.isNotEmpty()) {
+                "$base($index).$ext"
+            } else {
+                "$base($index)"
+            }
+            index++
+        }
+
+        return name
+    }
+    fun fileExists(
+        context: Context,
+        fileName: String,
+        folderName: String
+    ): Boolean {
+
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val projection = arrayOf(MediaStore.MediaColumns.DISPLAY_NAME)
+
+            val selection = "${MediaStore.MediaColumns.DISPLAY_NAME}=?"
+            val selectionArgs = arrayOf(fileName)
+
+            context.contentResolver.query(
+                MediaStore.Downloads.EXTERNAL_CONTENT_URI,
+                projection,
+                selection,
+                selectionArgs,
+                null
+            )?.use { cursor ->
+                cursor.count > 0
+            } ?: false
+
+        } else {
+            val file = File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                "$folderName/$fileName"
+            )
+            file.exists()
+        }
+    }
+    fun getMimeType(fileName: String): String {
+        return when (fileName.substringAfterLast(".", "").lowercase()) {
+            "png" -> "image/png"
+            "jpg", "jpeg" -> "image/jpeg"
+            "glb" -> "model/gltf-binary"
+            else -> "application/octet-stream"
+        }
+    }
 }

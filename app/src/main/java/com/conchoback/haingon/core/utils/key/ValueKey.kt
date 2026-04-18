@@ -2,7 +2,7 @@ package com.conchoback.haingon.core.utils.key
 
 object ValueKey {
     const val DOWNLOAD_ALBUM = "RBX Skins"
-    const val DOWNLOAD_ALBUM_BACKGROUND = "Image Background"
+    const val CLOTHES_ALBUM = "Clothes edit"
     const val TEMP_ALBUM = "Cache Album"
     const val HTML_LINK = "https://appassets.androidplatform.net/assets/public/index.html"
 

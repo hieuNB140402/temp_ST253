@@ -73,8 +73,10 @@ class ChooseClothesBeforeViewModel : ViewModel() {
         val returnList = ArrayList<AccessoryModel>()
 
         list.forEach { parentList ->
-            parentList.subAccessoryList.forEach { childList ->
-                returnList.add(childList.accessory)
+            parentList.subAccessoryList.forEachIndexed { index, child ->
+                if (index != 0) {
+                    returnList.add(child.accessory)
+                }
             }
         }
 

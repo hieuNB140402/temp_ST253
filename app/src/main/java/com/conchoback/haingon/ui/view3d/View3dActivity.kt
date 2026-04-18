@@ -18,6 +18,7 @@ import com.conchoback.haingon.core.extension.gone
 import com.conchoback.haingon.core.extension.handleBackLeftToRight
 import com.conchoback.haingon.core.extension.invisible
 import com.conchoback.haingon.core.extension.margin
+import com.conchoback.haingon.core.extension.startIntentRightToLeft
 import com.conchoback.haingon.core.extension.tap
 import com.conchoback.haingon.core.extension.visible
 import com.conchoback.haingon.core.helper.InternetHelper
@@ -28,8 +29,12 @@ import com.conchoback.haingon.data.model.clothes.ClothesModel
 import com.conchoback.haingon.databinding.ActivityView3dBinding
 import com.conchoback.haingon.ui.custom.CustomActivity
 import com.conchoback.haingon.ui.choose_clothes_after.ChooseClothesAccessoryActivity
+import com.conchoback.haingon.ui.download.DownloadActivity
+import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.jvm.java
 
 class View3dActivity : BaseActivity<ActivityView3dBinding>() {
@@ -74,6 +79,7 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
     override fun viewListener() {
         binding.apply {
             btnBack.tap { handleBackLeftToRight() }
+            btnDownload.tap { handleDownload() }
 
             btnThemeDark.tap { viewModel.dispatch(View3dAction.ChangeTheme(ValueKey.DARK_THEME)) }
             btnThemeLight.tap { viewModel.dispatch(View3dAction.ChangeTheme(ValueKey.LIGHT_THEME)) }
@@ -93,7 +99,7 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
             btnEmoji.tap { handleEditClothes(ValueKey.EMOJI_OPTION) }
             btnText.tap { handleEditClothes(ValueKey.TEXT_OPTION) }
 
-            btnClose.tap { viewModel.dispatch(View3dAction.ChangeShowFeature(false, "")) }
+        btnClose.tap { viewModel.dispatch(View3dAction.ChangeShowFeature(false, "")) }
         }
     }
 
@@ -124,7 +130,11 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
                     delay(100)
                     viewModel.dispatch(View3dAction.ChangeTheme(ValueKey.LIGHT_THEME))
 //                    viewModel.dispatch(View3dAction.ChangeTypeClothes(ValueKey.ACCESSORY))
-                    viewModel.dispatch(View3dAction.ChangeTypeClothes(intent.getStringExtra(IntentKey.CLOTHES_TYPE) ?: ValueKey.SHIRT))
+                    viewModel.dispatch(
+                        View3dAction.ChangeTypeClothes(
+                            intent.getStringExtra(IntentKey.CLOTHES_TYPE) ?: ValueKey.SHIRT
+                        )
+                    )
 
                 }
 
@@ -163,12 +173,25 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
         resultClothesLauncher.launch(nextScreen)
     }
 
-
     private fun checkInternet(action: () -> Unit) {
         if (InternetHelper.isInternetAvailable(this)) {
             action.invoke()
         } else {
             showToast(R.string.please_check_your_network_connection)
+        }
+    }
+
+    private fun handleDownload() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            showLoading()
+            val downloadList = viewModel.getDownloadData(this@View3dActivity)
+            val jsonList = Gson().toJson(downloadList)
+
+            withContext(Dispatchers.Main) {
+                dismissLoading()
+                startIntentRightToLeft(DownloadActivity::class.java, jsonList)
+                finish()
+            }
         }
     }
 
@@ -217,7 +240,10 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
                 viewModel.apply {
                     dispatch(View3dAction.ChangeShirt(ClothesModel(ValueKey.SHIRT, pathClothesDefault)))
                     dispatch(View3dAction.ChangePant(ClothesModel(ValueKey.PANT, pathClothesDefault)))
-                    dispatch(View3dAction.ChangeAccessory(viewModel.convertFromJsonAccessory(pathClothes)))
+                    lifecycleScope.launch {
+                        delay(500)
+                        dispatch(View3dAction.ChangeAccessory(viewModel.convertFromJsonAccessory(pathClothes)))
+                    }
                 }
             }
 
@@ -267,7 +293,6 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
 
     private fun renderAccessories(list: List<AccessoryModel>) {
         binding.webView.evaluateJavascript(viewModel.updateAccessory(list), null)
-//        binding.webView.evaluateJavascript(viewModel.updateAccessory(list), null)
         dLog("Accessories: $list")
     }
 

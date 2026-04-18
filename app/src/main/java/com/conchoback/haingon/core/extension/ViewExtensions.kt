@@ -1,5 +1,6 @@
 package com.conchoback.haingon.core.extension
 
+import android.R.id.input
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
@@ -238,5 +239,13 @@ fun Activity.hideNavigationFullScreen(isLightStatusBar: Boolean = false) {
         // Chỉnh màu icon (trắng/đen) tùy thuộc vào isLightStatusBar
         isAppearanceLightStatusBars = isLightStatusBar
         isAppearanceLightNavigationBars = isLightStatusBar
+    }
+}
+
+fun String.capitalizeFirst(): String {
+    if (this.isBlank()) return this
+
+    return this.replaceFirstChar { char ->
+        if (char.isLowerCase()) char.titlecase() else char.toString()
     }
 }

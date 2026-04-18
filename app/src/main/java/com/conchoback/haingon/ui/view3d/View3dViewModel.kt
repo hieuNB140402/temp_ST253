@@ -1,7 +1,5 @@
 package com.conchoback.haingon.ui.view3d
 
-import android.R.attr.path
-import android.R.attr.type
 import android.app.Activity
 import android.content.Context
 import android.webkit.WebResourceRequest
@@ -11,13 +9,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.webkit.WebViewAssetLoader
 import com.conchoback.haingon.core.extension.eLog
-import com.conchoback.haingon.core.extension.loadImage
 import com.conchoback.haingon.core.helper.MediaHelper
 import com.conchoback.haingon.core.utils.DataLocal
 import com.conchoback.haingon.core.utils.key.AssetsKey
 import com.conchoback.haingon.core.utils.key.DomainKey
 import com.conchoback.haingon.core.utils.key.IntentKey
 import com.conchoback.haingon.core.utils.key.ValueKey
+import com.conchoback.haingon.data.model.DownloadModel
 import com.conchoback.haingon.data.model.clothes.AccessoryModel
 import com.conchoback.haingon.data.model.clothes.ClothesModel
 import com.google.common.reflect.TypeToken
@@ -235,14 +233,73 @@ class View3dViewModel : ViewModel() {
         }
     }
 
-    fun handleSave(){
-        when(typeClothes.value){
-            ValueKey.SHIRT -> {
+    suspend fun getDownloadData(context: Context): List<DownloadModel> {
+        val list = ArrayList<DownloadModel>()
 
+        val shirtModel = shirtFlow.value!!
+        val pantModel = pantFlow.value!!
+        val accessoryModel = accessoryFlow.value
+
+        suspend fun moveIfInternalFile(currentPath: String): String {
+            return if (currentPath.contains(ValueKey.TEMP_ALBUM)) {
+                val fileName = currentPath.split("/").last()
+
+                MediaHelper.moveInternalFile(context, currentPath, "${ValueKey.CLOTHES_ALBUM}/$fileName")
+            } else {
+                currentPath
             }
         }
 
+        suspend fun addShirt() {
+            val thumb = moveIfInternalFile(shirtModel.item)
+            list.add(
+                DownloadModel(
+                    typeClothes = shirtModel.typeClothes,
+                    thumbnail = thumb,
+                )
+            )
+        }
+
+        suspend fun addPant() {
+            val thumb = moveIfInternalFile(pantModel.item)
+            list.add(
+                DownloadModel(
+                    typeClothes = pantModel.typeClothes,
+                    thumbnail = thumb,
+                )
+            )
+        }
+
+
+
+        when (typeClothes.value) {
+            ValueKey.SHIRT -> addShirt()
+
+            ValueKey.PANT -> addPant()
+
+            ValueKey.COMBO -> {
+                addShirt()
+                addPant()
+            }
+
+            ValueKey.ACCESSORY -> {
+                addShirt()
+                addPant()
+
+                accessoryModel.forEach { item ->
+                    list.add(
+                        DownloadModel(
+                            typeClothes = item.key,
+                            thumbnail = item.value,
+                        )
+                    )
+                }
+            }
+        }
+
+        return list
     }
+
     // Webview Function
     //==================================================================================================================
     fun updateTheme(theme: String): String {

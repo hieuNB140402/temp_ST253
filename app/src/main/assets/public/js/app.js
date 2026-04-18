@@ -2543,5 +2543,5 @@ window.setItems = function (dataList, charId = null) {
 
   // 2. Áp dụng phụ kiện 3D
   // Luôn gọi để đảm bảo logic xóa phụ kiện cũ (clearAllAccessories) được thực thi
-  window.setAccessories(accessoryTasks, charId);
+//  window.setAccessories(accessoryTasks, charId);
 };
