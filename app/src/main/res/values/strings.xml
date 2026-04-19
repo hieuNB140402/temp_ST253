@@ -56,47 +56,23 @@
 
     <string name="have_rated">Thank you for rate our app</string>
     <string name="share">Share</string>
-    <string name="delete">Delete</string>
-    <string name="download">Download</string>
 
-    <string name="do_you_want_to_delete">Do you want to delete?</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
 
     <string name="download_success">Download successful to the RBX Skins album</string>
-    <string name="no_item_is_here">No Item Here</string>
 
-    <string name="save">Save</string>
     <string name="done">Done</string>
 
     <string name="please_select_an_item">Please select an item</string>
-    <string name="save_failed_please_try_again">Save failed, please try again!</string>
-    <string name="download_failed_please_try_again_later">Download failed, please try again later!</string>
     <string name="downloading">Downloading...</string>
 
-    <string name="my_creation">My Creation</string>
     <string name="your_costume_isn_t_finished_yet_you_still_want_to_exit">Your costume isn\'t finished yet, you still want to exit?</string>
-    <string name="loading">Loading...</string>
-    <string name="bro_please_wait_a_moment">Bro, please wait a moment.</string>
     <string name="basic_skin">Basic Skin</string>
-    <string name="advanced_skin">Advanced Skin</string>
-    <string name="shirt">Shirt</string>
-    <string name="see_all">See all</string>
-    <string name="t_shirt">T-Shirt</string>
-    <string name="pant">Pant</string>
     <string name="how_to_use_clothes_for_rbx">How to use \nClothes for RBX?</string>
-    <string name="let_s_go">Let’s go</string>
-    <string name="customize">Customize</string>
-    <string name="add_to_my_creation">Add to My Creation</string>
-    <string name="add_to_my_creation_successfully">Add to My Creation successfully</string>
-    <string name="you_ve_already_added_it_to_my_creations">You\'ve already added it to My Creations.</string>
-    <string name="view">View</string>
     <string name="an_error_occurred_please_try_again_later">An error occurred, please try again later!</string>
-    <string name="choose_color">Choose Color</string>
-    <string name="clothes_skins_maker_for_rbx">Clothes Skins Maker For RBX</string>
     <string name="next">Next</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="special_clothes">Special Clothes</string>
     <string name="special">Special</string>
     <string name="clothes">Clothes</string>

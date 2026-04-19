@@ -29,6 +29,7 @@ class DownloadViewModel @Inject constructor(private val downloadRepository: Down
 
     // Normal Declaration
     //==================================================================================================================
+    var downloadModel = DownloadModel("", "")
 
     // Getter Setter
     //==================================================================================================================
@@ -37,6 +38,9 @@ class DownloadViewModel @Inject constructor(private val downloadRepository: Down
         _jsonList.value = json
     }
 
+    fun updateDownloadModel(model: DownloadModel){
+        downloadModel = model
+    }
 
     // Function feature
     //==================================================================================================================
@@ -47,11 +51,11 @@ class DownloadViewModel @Inject constructor(private val downloadRepository: Down
         return list
     }
 
-    suspend fun handleDownload(context: Context, model: DownloadModel): Boolean {
+    suspend fun handleDownload(context: Context): Boolean {
         return downloadRepository.downloadClothesFileToExternal(
             context,
-            model.thumbnail,
-            model.typeClothes != ValueKey.SHIRT && model.typeClothes != ValueKey.PANT
+            downloadModel.thumbnail,
+            downloadModel.typeClothes != ValueKey.SHIRT && downloadModel.typeClothes != ValueKey.PANT
         )
     }
 

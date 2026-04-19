@@ -2,7 +2,6 @@ package com.conchoback.haingon.ui.preview
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.media3.common.C
 import com.conchoback.haingon.core.extension.capitalizeFirst
 import com.conchoback.haingon.core.extension.loadAccessory2DURL
 import com.conchoback.haingon.core.helper.LoadClothesHelper
@@ -31,6 +30,7 @@ class PreviewViewModel @Inject constructor(
     //==================================================================================================================
     var id = -1
     var currentClothes = DownloadModel("", "")
+
 
     // Getter Setter
     //==================================================================================================================
@@ -76,8 +76,10 @@ class PreviewViewModel @Inject constructor(
     }
 
     suspend fun downloadClothesFileToExternal(context: Context): Boolean {
-        return downloadRepository.downloadClothesFileToExternal(context, currentClothes.thumbnail,
-            currentClothes.typeClothes != ValueKey.SHIRT && currentClothes.typeClothes != ValueKey.PANT)
+        return downloadRepository.downloadClothesFileToExternal(
+            context, currentClothes.thumbnail,
+            currentClothes.typeClothes != ValueKey.SHIRT && currentClothes.typeClothes != ValueKey.PANT
+        )
     }
 
 }

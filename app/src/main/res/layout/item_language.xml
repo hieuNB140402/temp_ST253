@@ -6,7 +6,6 @@
     android:layout_marginBottom="16dp">
 
     <FrameLayout
-        android:id="@+id/flMain"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/bg_4_solid_white"

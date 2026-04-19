@@ -1,6 +1,8 @@
 package com.conchoback.haingon.ui.download
 
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.activity.enableEdgeToEdge
@@ -13,16 +15,21 @@ import androidx.media3.exoplayer.offline.Download
 import com.conchoback.haingon.R
 import com.conchoback.haingon.core.base.BaseActivity
 import com.conchoback.haingon.core.extension.checkInternet
+import com.conchoback.haingon.core.extension.checkPermissions
+import com.conchoback.haingon.core.extension.goToSettings
 import com.conchoback.haingon.core.extension.launchIO
+import com.conchoback.haingon.core.extension.requestPermission
 import com.conchoback.haingon.core.extension.setImageActionBar
 import com.conchoback.haingon.core.extension.startIntentRightToLeft
 import com.conchoback.haingon.core.extension.startIntentWithClearTop
 import com.conchoback.haingon.core.extension.tap
 import com.conchoback.haingon.core.utils.key.IntentKey
+import com.conchoback.haingon.core.utils.key.RequestKey
 import com.conchoback.haingon.data.model.DownloadModel
 import com.conchoback.haingon.databinding.ActivityDownloadBinding
 import com.conchoback.haingon.ui.home.HomeActivity
 import com.conchoback.haingon.ui.how_to_use.HowToUseActivity
+import com.conchoback.haingon.ui.permission.PermissionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,6 +38,7 @@ import kotlinx.coroutines.withContext
 @AndroidEntryPoint
 class DownloadActivity : BaseActivity<ActivityDownloadBinding>() {
     private val viewModel: DownloadViewModel by viewModels()
+    private val permissionViewModel: PermissionViewModel by viewModels()
     private val downloadAdapter by lazy { DownloadAdapter(this) }
 
     override fun setViewBinding(): ActivityDownloadBinding {
@@ -71,9 +79,27 @@ class DownloadActivity : BaseActivity<ActivityDownloadBinding>() {
 
     // Handle
     //==================================================================================================================
-    private fun handleDownload(model: DownloadModel) {
+
+    private fun checkStoragePermission(model: DownloadModel) {
+        viewModel.updateDownloadModel(model)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU || checkPermissions(permissionViewModel.getStoragePermissions())) {
+            handleDownload()
+        } else {
+            if (permissionViewModel.needGoToSettings(sharePreference, true)) {
+                goToSettings()
+            } else {
+                requestPermission(permissionViewModel.getStoragePermissions(), RequestKey.STORAGE_PERMISSION_CODE)
+            }
+        }
+    }
+
+    private fun handleDownload() {
         launchIO(
-            blockIO = { viewModel.handleDownload(this@DownloadActivity, model) },
+            blockIO = {
+                showLoading()
+                viewModel.handleDownload(this@DownloadActivity)
+            },
             blockMain = { isSuccess ->
                 dismissLoading(true)
 
@@ -98,13 +124,23 @@ class DownloadActivity : BaseActivity<ActivityDownloadBinding>() {
             blockMain = { list -> downloadAdapter.submitList(list) }
         )
 
-        downloadAdapter.onDownloadClick = { model -> checkInternet { handleDownload(model) } }
+        downloadAdapter.onDownloadClick = { model -> checkInternet { checkStoragePermission(model) } }
     }
 
     // Result + Permission
     //==================================================================================================================
     @SuppressLint("GestureBackNavigation", "MissingSuperCall")
-    override fun onBackPressed() {}
+    override fun onBackPressed() {
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        val granted = grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }
+        if (requestCode == RequestKey.STORAGE_PERMISSION_CODE && granted) {
+            permissionViewModel.updateStorageGranted(sharePreference, true)
+            handleDownload()
+        }
+    }
 
     // Ads
     //==================================================================================================================

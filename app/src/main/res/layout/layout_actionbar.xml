@@ -19,7 +19,6 @@
 
     <!--    tvStart-->
     <TextView
-        android:id="@+id/tvStart"
         style="@style/single_marquee"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

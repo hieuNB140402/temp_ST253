@@ -2,18 +2,27 @@ package com.conchoback.haingon.ui.preview
 
 import android.R.attr.type
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.view.LayoutInflater
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.conchoback.haingon.R
 import com.conchoback.haingon.core.base.BaseActivity
+import com.conchoback.haingon.core.extension.checkInternet
+import com.conchoback.haingon.core.extension.checkPermissions
+import com.conchoback.haingon.core.extension.goToSettings
 import com.conchoback.haingon.core.extension.handleBackLeftToRight
 import com.conchoback.haingon.core.extension.launchIO
 import com.conchoback.haingon.core.extension.loadImage
+import com.conchoback.haingon.core.extension.requestPermission
 import com.conchoback.haingon.core.extension.setImageActionBar
 import com.conchoback.haingon.core.extension.tap
 import com.conchoback.haingon.core.utils.key.IntentKey
+import com.conchoback.haingon.core.utils.key.RequestKey
+import com.conchoback.haingon.data.model.DownloadModel
 import com.conchoback.haingon.databinding.ActivityPreviewBinding
+import com.conchoback.haingon.ui.permission.PermissionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,6 +31,7 @@ import kotlinx.coroutines.withContext
 @AndroidEntryPoint
 class PreviewActivity : BaseActivity<ActivityPreviewBinding>() {
     private val viewModel: PreviewViewModel by viewModels()
+    private val permissionViewModel: PermissionViewModel by viewModels()
 
     override fun setViewBinding(): ActivityPreviewBinding {
         return ActivityPreviewBinding.inflate(LayoutInflater.from(this))
@@ -41,7 +51,7 @@ class PreviewActivity : BaseActivity<ActivityPreviewBinding>() {
         binding.actionBar.apply {
             btnActionBarLeft.tap { handleBackLeftToRight() }
             btnActionBarNextToRight.tap { handleDelete() }
-            btnActionBarRight.tap { handleDownload() }
+            btnActionBarRight.tap { checkInternet { checkStoragePermission() } }
         }
 
     }
@@ -68,6 +78,18 @@ class PreviewActivity : BaseActivity<ActivityPreviewBinding>() {
                 }
             }
         )
+    }
+
+    private fun checkStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU || checkPermissions(permissionViewModel.getStoragePermissions())) {
+            handleDownload()
+        } else {
+            if (permissionViewModel.needGoToSettings(sharePreference, true)) {
+                goToSettings()
+            } else {
+                requestPermission(permissionViewModel.getStoragePermissions(), RequestKey.STORAGE_PERMISSION_CODE)
+            }
+        }
     }
 
     private fun handleDownload() {
@@ -100,6 +122,14 @@ class PreviewActivity : BaseActivity<ActivityPreviewBinding>() {
 
     // Result + Permission
     //==================================================================================================================
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        val granted = grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }
+        if (requestCode == RequestKey.STORAGE_PERMISSION_CODE && granted) {
+            permissionViewModel.updateStorageGranted(sharePreference, true)
+            handleDownload()
+        }
+    }
 
     // Ads
     //==================================================================================================================
