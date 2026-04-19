@@ -1,7 +1,11 @@
 package com.conchoback.haingon.data.model
 
+import androidx.room.PrimaryKey
+
 data class MyCreationModel(
-    var isShowSelection: Boolean = false,
-    var isSelected: Boolean = false,
-    val clothes: DownloadModel
+    @PrimaryKey(autoGenerate = true)
+    val id: Int,
+    val clothes: DownloadModel,
+    val isShowSelection: Boolean = false,
+    val isSelected: Boolean = false
 )

@@ -580,11 +580,7 @@ object MediaHelper {
         }
     }
 
-    suspend fun downloadAllToExternal(
-        context: Context,
-        paths: List<String>,
-        folderName: String
-    ): Boolean = withContext(Dispatchers.IO) {
+    suspend fun downloadAllToExternal(context: Context, paths: List<String>, folderName: String): Boolean = withContext(Dispatchers.IO) {
 
         val result = mutableListOf<String>()
 

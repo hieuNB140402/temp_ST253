@@ -1,4 +1,4 @@
-package com.conchoback.haingon.ui.custom.adapter
+package com.conchoback.haingon.ui.custom
 
 import com.conchoback.haingon.core.base.BaseAdapter
 import com.conchoback.haingon.core.extension.loadImage

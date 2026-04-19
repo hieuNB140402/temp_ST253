@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
 }
 
 android {
@@ -116,5 +117,11 @@ dependencies {
     implementation 'com.github.Mohammad3125:KavehColorPicker:v1.0.0'
     //RasmView
     implementation 'com.raedapps:rasmview:1.2.1'
-
+    // Hilt
+    implementation "com.google.dagger:hilt-android:2.57.1"
+    kapt "com.google.dagger:hilt-compiler:2.57.1"
+    // Optional: Room + Kotlin Coroutines
+    implementation "androidx.room:room-runtime:2.8.0"
+    kapt "androidx.room:room-compiler:2.8.0"
+    implementation "androidx.room:room-ktx:2.8.0"
 }

@@ -15,6 +15,7 @@ import com.conchoback.haingon.core.base.BaseActivity
 import com.conchoback.haingon.core.extension.eLog
 import com.conchoback.haingon.core.extension.gone
 import com.conchoback.haingon.core.extension.handleBackLeftToRight
+import com.conchoback.haingon.core.extension.launchIO
 import com.conchoback.haingon.core.extension.loadImage
 import com.conchoback.haingon.core.extension.openImagePicker
 import com.conchoback.haingon.core.extension.tap
@@ -28,7 +29,7 @@ import com.conchoback.haingon.data.model.draw.DrawableDraw
 import com.conchoback.haingon.databinding.ActivityCustomBinding
 import com.conchoback.haingon.dialog.text.TextDialog
 import com.conchoback.haingon.listener.listenerdraw.OnDrawListener
-import com.conchoback.haingon.ui.custom.adapter.ItemAdapter
+import com.conchoback.haingon.ui.custom.ItemAdapter
 import com.raed.rasmview.brushtool.data.Brush
 import com.raed.rasmview.brushtool.data.BrushesRepository
 import kotlinx.coroutines.Dispatchers
@@ -75,30 +76,27 @@ class CustomActivity : BaseActivity<ActivityCustomBinding>() {
 
     /* List */
     private fun setupList() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.loadDataList(this@CustomActivity)
+        binding.apply {
+            lnlOption.gone()
+            colorPicker.gone()
+            rasmView.gone()
+            rcvList.visible()
 
-            withContext(Dispatchers.Main) {
-                binding.apply {
-                    lnlOption.gone()
-                    colorPicker.gone()
-                    rasmView.gone()
-                    rcvList.visible()
-
-                    rcvList.apply {
-                        adapter = itemAdapter
-                        itemAnimator = null
-                    }
-
-                    initDrawView()
-                }
-
-                itemAdapter.submitList(viewModel.itemRcvList)
+            rcvList.apply {
+                adapter = itemAdapter
+                itemAnimator = null
             }
+
+            initDrawView()
         }
 
+        launchIO(
+            blockIO = { viewModel.loadDataList(this@CustomActivity) },
+            blockMain = { itemAdapter.submitList(viewModel.itemRcvList) }
+        )
+
         itemAdapter.onItemClick = { path, position ->
-            if (position == 0 && viewModel.typeOption.value == ValueKey.IMAGE_OPTION) {
+            if (viewModel.isOpenImagePicker(position)) {
                 openImagePicker()
             } else {
                 addDrawable(path)
@@ -130,6 +128,7 @@ class CustomActivity : BaseActivity<ActivityCustomBinding>() {
 
             btnChooseBrush.tap { handleBrush() }
             btnEraser.tap { handleEraser() }
+
             handleSeekbarListener()
             handleChangeColor()
         }
@@ -201,14 +200,12 @@ class CustomActivity : BaseActivity<ActivityCustomBinding>() {
                 override fun onAddedDraw(draw: Draw) {
                     viewModel.updateCurrentCurrentDraw(draw)
                     viewModel.addDrawView(draw)
-                    checkExist()
                 }
 
                 override fun onClickedDraw(draw: Draw) {}
 
                 override fun onDeletedDraw(draw: Draw) {
                     viewModel.deleteDrawView(draw)
-                    checkExist()
                 }
 
                 override fun onDragFinishedDraw(draw: Draw) {}
@@ -242,27 +239,22 @@ class CustomActivity : BaseActivity<ActivityCustomBinding>() {
         }
     }
 
-    private fun checkExist() {
-        viewModel.updateIsDrawExist(binding.drawView.getDraws().isNotEmpty())
-    }
-
     private fun addDrawable(path: String, isCharacter: Boolean = false, bitmap: Bitmap? = null) {
         val contextActivity = this
-        lifecycleScope.launch(Dispatchers.IO) {
-            val bitmapDefault = if (bitmap == null) {
-                Glide.with(contextActivity)
-                    .load(path)
-                    .signature(ObjectKey(File(path).lastModified()))
-                    .submit().get().toBitmap()
-            } else {
-                bitmap
-            }
-            val drawableEmoji = viewModel.loadDrawableEmoji(contextActivity, bitmapDefault, isCharacter)
-
-            withContext(Dispatchers.Main) {
-                drawableEmoji.let { binding.drawView.addDraw(it) }
-            }
-        }
+        launchIO(
+            blockIO = {
+                val bitmapDefault = if (bitmap == null) {
+                    Glide.with(contextActivity)
+                        .load(path)
+                        .signature(ObjectKey(File(path).lastModified()))
+                        .submit().get().toBitmap()
+                } else {
+                    bitmap
+                }
+                viewModel.loadDrawableEmoji(contextActivity, bitmapDefault, isCharacter)
+            },
+            blockMain = { drawableEmoji -> drawableEmoji.let { binding.drawView.addDraw(it) } }
+        )
     }
 
     private fun handleDone() {
@@ -272,7 +264,7 @@ class CustomActivity : BaseActivity<ActivityCustomBinding>() {
             viewModel.handleDone(this@CustomActivity, binding.flExport).collect { state ->
                 when (state) {
                     SaveState.Loading -> showLoading()
-                    
+
                     SaveState.Nothing -> {
                         withContext(Dispatchers.Main) {
                             handleBackLeftToRight()
@@ -289,7 +281,7 @@ class CustomActivity : BaseActivity<ActivityCustomBinding>() {
 
                     is SaveState.Success -> {
                         dismissLoading(true)
-                        
+
                         withContext(Dispatchers.Main) {
                             val resultIntent = Intent()
                             resultIntent.putExtra(IntentKey.EDITED_CLOTHES_KEY, state.path)

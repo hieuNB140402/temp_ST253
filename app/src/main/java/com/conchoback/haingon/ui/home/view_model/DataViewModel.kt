@@ -1,4 +1,4 @@
-package com.conchoback.haingon.ui.home
+package com.conchoback.haingon.ui.home.view_model
 
 import android.content.Context
 import android.util.Log
@@ -14,7 +14,11 @@ import com.conchoback.haingon.core.service.RetrofitPreventive
 import com.conchoback.haingon.core.utils.DataLocal
 import com.conchoback.haingon.core.utils.key.ValueKey
 import com.conchoback.haingon.core.utils.state.CallApiState
+import com.conchoback.haingon.data.local.ClothesSaved
 import com.conchoback.haingon.data.model.PathAPI
+import com.conchoback.haingon.ui.home.DataRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +30,8 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import java.io.File
 
-class DataViewModel : ViewModel() {
+@HiltViewModel
+class DataViewModel @Inject constructor(private val repository: DataRepository) : ViewModel() {
     // Flow Declaration
     //==================================================================================================================
     private val _allData = MutableStateFlow<PathAPI?>(null)
@@ -48,7 +53,7 @@ class DataViewModel : ViewModel() {
                 RetrofitClient.api.getAllData()
             } catch (e: Exception) {
                 DataLocal.isFailBaseURL = true
-                Log.e("nbhieu", "BASE_URL failed: ${e.message}")
+                Log.e("nbhieu", "DOMAIN failed: ${e.message}")
                 null
             }
         } ?: withTimeoutOrNull(5_000) {
@@ -56,7 +61,7 @@ class DataViewModel : ViewModel() {
                 RetrofitPreventive.api.getAllData()
             } catch (e: Exception) {
                 DataLocal.isFailBaseURL = false
-                Log.e("nbhieu", "BASE_URL_PREVENTIVE failed: ${e.message}")
+                Log.e("nbhieu", "DOMAIN_PREVENTIVE failed: ${e.message}")
                 null
             }
         }
@@ -66,7 +71,7 @@ class DataViewModel : ViewModel() {
             withContext(Dispatchers.IO) {
                 val data = response.body()!!
                 val folderClothes = data.folders.first()
-                if (folderClothes.quantity > 1){
+                if (folderClothes.quantity > 1) {
                     sharePreferenceHelper.setFirstClothes("${folderClothes.category}/1.png")
                 }
                 MediaHelper.writeModelToFile(context, ValueKey.DATA_FILE_API_INTERNAL, data)
@@ -109,7 +114,7 @@ class DataViewModel : ViewModel() {
 
                 var dataApi = MediaHelper.readModelFromFile<PathAPI>(context, ValueKey.DATA_FILE_API_INTERNAL) ?: null
 
-                if (dataApi == null && InternetHelper.checkInternet(context)) {
+                if (dataApi == null && InternetHelper.isInternetAvailable(context)) {
                     getAllParts(context, sharePreferenceHelper).collect { state ->
                         when (state) {
                             CallApiState.Loading -> {}
@@ -127,5 +132,19 @@ class DataViewModel : ViewModel() {
             val timeEnd = System.currentTimeMillis()
             dLog("Time saveAndReadData: ${timeEnd - timeStart}")
         }
+    }
+
+    // Room
+    //==================================================================================================================
+    suspend fun getAllClothesSaved() {
+        repository.getAllClothesSaved()
+    }
+
+    suspend fun deleteClothesSavedByIds(ids: List<Int>) {
+        repository.deleteClothesSavedByIds(ids)
+    }
+
+    suspend fun insertClothesSavedList(clothesSavedList: List<ClothesSaved>) {
+        repository.insertClothesSavedList(clothesSavedList)
     }
 }

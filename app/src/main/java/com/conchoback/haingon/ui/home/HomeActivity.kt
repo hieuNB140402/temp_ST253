@@ -1,7 +1,9 @@
 package com.conchoback.haingon.ui.home
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.view.LayoutInflater
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.isInvisible
 import androidx.lifecycle.lifecycleScope
@@ -15,15 +17,24 @@ import com.conchoback.haingon.core.helper.LanguageHelper
 import com.conchoback.haingon.core.utils.DataLocal
 import com.conchoback.haingon.core.utils.state.RateState
 import com.conchoback.haingon.databinding.ActivityHomeBinding
+import com.conchoback.haingon.ui.home.adapter.HomeAdapter
+import com.conchoback.haingon.ui.home.view_model.HomeViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.system.exitProcess
 
+
+@AndroidEntryPoint
 class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     private val viewModel: HomeViewModel by viewModels()
     private val homeAdapter: HomeAdapter by lazy { HomeAdapter(this) }
+
+    val resultDelete = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { data ->
+        viewModel.reSubmitMyCreation(data)
+    }
 
     private val btnTabList by lazy {
         arrayListOf(
@@ -58,6 +69,11 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
         initVpg()
     }
 
+    override fun dataObservable() {
+        lifecycleScope.launch {
+            launch { viewModel.currentTab.collect { index -> setupTab(index) } }
+        }
+    }
 
     override fun viewListener() {
         handleBottomNav()
@@ -77,36 +93,37 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
     // Handle
     //==================================================================================================================
-    private fun handleBottomNav() = with(binding) {
+    private fun handleBottomNav() {
         btnTabList.forEachIndexed { indexButton, button ->
-            button.tap {
-                vpgHome.setCurrentItem(indexButton, true)
+            button.tap { viewModel.setCurrentTab(indexButton) }
+        }
+    }
 
-                lineTabList.forEachIndexed { indexLine, line -> line.isInvisible = indexLine != indexButton }
+    // Observable
+    //==================================================================================================================
+    fun setupTab(index: Int) {
+        if (index == -1) return
+        binding.apply {
+            vpgHome.setCurrentItem(index, true)
 
-                imvTabList.forEachIndexed { indexImage, image ->
-                    val res = if (indexImage == indexButton)
-                        DataLocal.bottomNavigationSelected[indexImage]
-                    else
-                        DataLocal.bottomNavigationNotSelect[indexImage]
-                    image.setImageResource(res)
+            lineTabList.forEachIndexed { indexLine, line -> line.isInvisible = indexLine != index }
+
+            imvTabList.forEachIndexed { indexImage, image ->
+                val res = if (indexImage == index)
+                    DataLocal.bottomNavigationSelected[indexImage]
+                else
+                    DataLocal.bottomNavigationNotSelect[indexImage]
+                image.setImageResource(res)
+            }
+
+            lifecycleScope.launch(Dispatchers.IO) {
+                if (index == 1) {
+                    viewModel.setSelectionState(false)
+                    viewModel.getAllClothesSaved()
                 }
             }
         }
     }
-
-    fun checkInternet(action: () -> Unit) {
-        if (InternetHelper.isInternetAvailable(this)) {
-            action.invoke()
-        } else {
-            showToast(R.string.please_check_your_network_connection)
-        }
-    }
-
-
-    // Observable
-    //==================================================================================================================
-
 
     // Result + Permission
     //==================================================================================================================

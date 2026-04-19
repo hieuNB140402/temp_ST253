@@ -2,6 +2,7 @@ package com.conchoback.haingon.ui.choose_clothes_before.adapter
 
 import com.conchoback.haingon.core.base.BaseAdapter
 import com.conchoback.haingon.core.extension.dLog
+import com.conchoback.haingon.core.extension.domain
 import com.conchoback.haingon.core.extension.gone
 import com.conchoback.haingon.core.extension.loadImage
 import com.conchoback.haingon.core.extension.tap
@@ -19,16 +20,16 @@ class ClothesAdapter :
             vFocus.gone()
 
             val domain = if (item.contains(DomainKey.SPECIAL_CATEGORY)){
-                val domain = if (DataLocal.isFailBaseURL) DomainKey.BASE_URL_PREVENTIVE else DomainKey.BASE_URL
-                "$domain${DomainKey.SUB_DOMAIN}"
+                domain(DomainKey.BASE_PATH)
             }else{
                 AssetsKey.ASSET_MANAGER
             }
-            val path = "$domain/$item"
 
-            dLog("path[$position]: $path")
+            val fullPath = "$domain/$item"
 
-            loadImage(path, imvImage)
+            dLog("fullPath[$position]: $fullPath")
+
+            loadImage(fullPath, imvImage)
 
             root.tap { onItemClick.invoke(item) }
         }

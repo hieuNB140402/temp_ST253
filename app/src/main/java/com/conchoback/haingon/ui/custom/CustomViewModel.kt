@@ -46,8 +46,6 @@ class CustomViewModel : ViewModel() {
     var brushSizeDefault = 0.3f
     var brushColorDefault = 0
 
-    var isDrawExist = false
-
     var typeClothesSelected = ValueKey.SHIRT
 
     // Getter Setter
@@ -64,9 +62,6 @@ class CustomViewModel : ViewModel() {
         typeClothesSelected = type
     }
 
-    fun updateIsDrawExist(isExist: Boolean) {
-        isDrawExist = isExist
-    }
 
     // Function feature
     //==================================================================================================================
@@ -122,8 +117,8 @@ class CustomViewModel : ViewModel() {
 
             image.contains(DomainKey.SPECIAL_CATEGORY) -> {
                 // api
-                val domain = if (DataLocal.isFailBaseURL) DomainKey.BASE_URL_PREVENTIVE else DomainKey.BASE_URL
-                "${domain}/${DomainKey.SUB_DOMAIN}/$image"
+                val domain = if (DataLocal.isFailBaseURL) DomainKey.DOMAIN_PREVENTIVE else DomainKey.DOMAIN
+                "${domain}/${DomainKey.BASE_PATH}/$image"
             }
 
             else -> {
@@ -142,4 +137,8 @@ class CustomViewModel : ViewModel() {
         }
 
     }.flowOn(Dispatchers.IO)
+
+    fun isOpenImagePicker(position: Int) : Boolean{
+        return position == 0 && typeOption.value == ValueKey.IMAGE_OPTION
+    }
 }

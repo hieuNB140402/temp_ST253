@@ -1,5 +1,6 @@
 package com.conchoback.haingon.core.base
 
+import android.R.attr.text
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Toast
@@ -31,6 +32,7 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
 
     protected val sharePreference = App.instant.sharePreference
 
+    var toast: Toast? = null
     private val loadingDialog by lazy { LoadingDialog(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +42,7 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
 
         _binding = setViewBinding()
         setContentView(binding.root)
-
+        toast = Toast.makeText(applicationContext, "", Toast.LENGTH_SHORT)
         setupUI()
     }
 
@@ -82,13 +84,17 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
     }
 
     fun showToast(message: Any) {
+        toast?.cancel()
+
         val text = when (message) {
             is String -> message
             is Int -> getString(message)
             else -> ""
         }
 
-        Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT).show()
+        toast = Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT)
+
+        toast?.show()
     }
 
     override fun onDestroy() {

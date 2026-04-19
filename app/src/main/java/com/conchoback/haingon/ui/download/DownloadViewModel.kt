@@ -12,12 +12,15 @@ import com.conchoback.haingon.data.model.DownloadModel
 import com.conchoback.haingon.data.model.clothes.AccessoryModel
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
+import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
 
-class DownloadViewModel : ViewModel() {
+@HiltViewModel
+class DownloadViewModel @Inject constructor(private val downloadRepository: DownloadRepository) : ViewModel() {
     // Flow Declaration
     //==================================================================================================================
     private val _jsonList = MutableStateFlow<String>("")
@@ -44,36 +47,12 @@ class DownloadViewModel : ViewModel() {
         return list
     }
 
-    suspend fun handleDownload(context: Context, model: DownloadModel) : Boolean{
-        return MediaHelper.downloadAllToExternal(
-            context = context,
-            paths = listOf(fullDomainImage(context, model)),
-            folderName = ValueKey.DOWNLOAD_ALBUM
+    suspend fun handleDownload(context: Context, model: DownloadModel): Boolean {
+        return downloadRepository.downloadClothesFileToExternal(
+            context,
+            model.thumbnail,
+            model.typeClothes != ValueKey.SHIRT && model.typeClothes != ValueKey.PANT
         )
     }
 
-    fun fullDomainImage(context: Context, model: DownloadModel): String {
-        return when {
-            model.thumbnail.contains(ValueKey.CLOTHES_ALBUM) -> {
-                // Internal
-                val file = File(context.filesDir, model.thumbnail)
-                file.absolutePath
-            }
-
-            model.thumbnail.contains(AssetsKey.COMBO_ASSET) || model.thumbnail.contains(AssetsKey.BASIC_ASSET) -> {
-                // Asset
-                "${AssetsKey.ASSET_MANAGER}/${model.thumbnail}"
-            }
-
-            else -> {
-                // api
-                val domain = if (DataLocal.isFailBaseURL) DomainKey.BASE_URL_PREVENTIVE else DomainKey.BASE_URL
-                if (model.typeClothes != ValueKey.SHIRT && model.typeClothes != ValueKey.PANT){
-                    "${domain}${DomainKey.SUB_DOMAIN}/${DomainKey.PREVIEW_3D}/${model.thumbnail}.glb"
-                }else{
-                    "${domain}${DomainKey.SUB_DOMAIN}/${model.thumbnail}"
-                }
-            }
-        }
-    }
 }

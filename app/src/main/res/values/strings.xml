@@ -69,7 +69,7 @@
     <string name="save">Save</string>
     <string name="done">Done</string>
 
-    <string name="please_select_an_image">Please select an image</string>
+    <string name="please_select_an_item">Please select an item</string>
     <string name="save_failed_please_try_again">Save failed, please try again!</string>
     <string name="download_failed_please_try_again_later">Download failed, please try again later!</string>
     <string name="downloading">Downloading...</string>

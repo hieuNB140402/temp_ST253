@@ -8,10 +8,12 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.graphics.drawable.DrawableCompat.applyTheme
 import androidx.lifecycle.lifecycleScope
 import androidx.webkit.WebViewClientCompat
 import com.conchoback.haingon.R
 import com.conchoback.haingon.core.base.BaseActivity
+import com.conchoback.haingon.core.extension.checkInternet
 import com.conchoback.haingon.core.extension.dLog
 import com.conchoback.haingon.core.extension.expandView
 import com.conchoback.haingon.core.extension.gone
@@ -31,12 +33,14 @@ import com.conchoback.haingon.ui.custom.CustomActivity
 import com.conchoback.haingon.ui.choose_clothes_after.ChooseClothesAccessoryActivity
 import com.conchoback.haingon.ui.download.DownloadActivity
 import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.jvm.java
 
+@AndroidEntryPoint
 class View3dActivity : BaseActivity<ActivityView3dBinding>() {
     private val viewModel: View3dViewModel by viewModels()
 
@@ -99,7 +103,7 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
             btnEmoji.tap { handleEditClothes(ValueKey.EMOJI_OPTION) }
             btnText.tap { handleEditClothes(ValueKey.TEXT_OPTION) }
 
-        btnClose.tap { viewModel.dispatch(View3dAction.ChangeShowFeature(false, "")) }
+            btnClose.tap { viewModel.dispatch(View3dAction.ChangeShowFeature(false, "")) }
         }
     }
 
@@ -147,7 +151,7 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
     //==================================================================================================================
     private fun handleTapClothes(type: String) {
         if (!viewModel.isAccessory()) {
-            viewModel.dispatch(View3dAction.ChangeShowFeature(true, type))
+            checkInternet { viewModel.dispatch(View3dAction.ChangeShowFeature(true, type)) }
             return
         }
 
@@ -171,14 +175,6 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
         nextScreen.putExtra(IntentKey.INTENT_KEY, typeEdit)
 
         resultClothesLauncher.launch(nextScreen)
-    }
-
-    private fun checkInternet(action: () -> Unit) {
-        if (InternetHelper.isInternetAvailable(this)) {
-            action.invoke()
-        } else {
-            showToast(R.string.please_check_your_network_connection)
-        }
     }
 
     private fun handleDownload() {

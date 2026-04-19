@@ -7,16 +7,12 @@ import android.net.NetworkCapabilities
 import com.conchoback.haingon.core.utils.state.HandleState
 
 object InternetHelper {
-    fun checkInternet(context: Context, state : ((HandleState) -> Unit) = {}){
+    fun checkInternetState(context: Context, state : ((HandleState) -> Unit) = {}){
         if (isInternetAvailable(context)){
             state.invoke(HandleState.SUCCESS)
         }else{
             state.invoke(HandleState.FAIL)
         }
-    }
-
-    fun checkInternet(context: Context) : Boolean{
-        return isInternetAvailable(context)
     }
 
     fun isInternetAvailable(context: Context): Boolean {

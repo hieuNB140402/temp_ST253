@@ -1,28 +1,51 @@
 package com.conchoback.haingon.ui.choose_clothes_after.adapter
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.core.view.isVisible
-import com.conchoback.haingon.core.base.BaseAdapter
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.conchoback.haingon.core.extension.loadAccessory2DURL
 import com.conchoback.haingon.core.extension.loadImage
 import com.conchoback.haingon.core.extension.tap
-import com.conchoback.haingon.core.utils.DataLocal
-import com.conchoback.haingon.core.utils.key.DomainKey
 import com.conchoback.haingon.data.model.clothes.AccessorySelectedModel
 import com.conchoback.haingon.databinding.ItemCategoryAccessoryBinding
 
 class CategoryAccessoryAdapter :
-    BaseAdapter<AccessorySelectedModel, ItemCategoryAccessoryBinding>(ItemCategoryAccessoryBinding::inflate) {
+    ListAdapter<AccessorySelectedModel, CategoryAccessoryAdapter.CategoryAccessoryViewHolder>(CategoryAccessoryDiffCallback()) {
+
     var onItemClick: ((position: Int) -> Unit) = { _ -> }
+    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): CategoryAccessoryViewHolder {
+        return CategoryAccessoryViewHolder(ItemCategoryAccessoryBinding.inflate(LayoutInflater.from(p0.context), p0, false))
+    }
 
-    override fun onBind(binding: ItemCategoryAccessoryBinding, item: AccessorySelectedModel, position: Int) {
-        binding.apply {
-            vFocus.isVisible = item.isSelected
+    override fun onBindViewHolder(p0: CategoryAccessoryViewHolder, p1: Int) {
+        p0.bind(getItem(p1))
+    }
 
-            val domain = if (DataLocal.isFailBaseURL) DomainKey.BASE_URL_PREVENTIVE else DomainKey.BASE_URL
-            val path = "$domain${DomainKey.SUB_DOMAIN}/${DomainKey.PREVIEW_2D}/${item.thumbnail}.png"
+    inner class CategoryAccessoryViewHolder(val binding: ItemCategoryAccessoryBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: AccessorySelectedModel) {
+            binding.apply {
+                vFocus.isVisible = item.isSelected
 
-            loadImage(path, imvImage)
+                val pathURL = loadAccessory2DURL(item.thumbnail)
 
-            root.tap { onItemClick.invoke(position) }
+                loadImage(pathURL, imvImage)
+
+                root.tap { onItemClick.invoke(bindingAdapterPosition) }
+            }
         }
+    }
+
+    class CategoryAccessoryDiffCallback : DiffUtil.ItemCallback<AccessorySelectedModel>() {
+        override fun areItemsTheSame(p0: AccessorySelectedModel, p1: AccessorySelectedModel): Boolean {
+            return p0.id == p1.id
+        }
+
+        override fun areContentsTheSame(p0: AccessorySelectedModel, p1: AccessorySelectedModel): Boolean {
+            return p0 == p1
+        }
+
     }
 }

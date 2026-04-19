@@ -1,4 +1,4 @@
-package com.conchoback.haingon.ui.home
+package com.conchoback.haingon.ui.home.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

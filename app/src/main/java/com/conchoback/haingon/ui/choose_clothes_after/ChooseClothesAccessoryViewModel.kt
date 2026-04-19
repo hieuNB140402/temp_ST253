@@ -1,17 +1,22 @@
 package com.conchoback.haingon.ui.choose_clothes_after
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.conchoback.haingon.core.utils.key.ValueKey
 import com.conchoback.haingon.data.model.clothes.AccessoryModel
 import com.conchoback.haingon.data.model.clothes.AccessorySelectedModel
 import com.conchoback.haingon.data.model.PathAPI
 import com.conchoback.haingon.data.model.SelectedModel
 import com.conchoback.haingon.data.model.clothes.SubAccessoryModel
+import com.conchoback.haingon.ui.choose_clothes_after.adapter.CategoryAccessoryAdapter
+import com.google.common.collect.Multimaps.index
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class ChooseClothesAccessoryViewModel : ViewModel() {
     // Flow Declaration
@@ -22,13 +27,16 @@ class ChooseClothesAccessoryViewModel : ViewModel() {
     private val _typeClothes = MutableStateFlow<String>("")
     val typeClothes: StateFlow<String> = _typeClothes.asStateFlow()
 
+    private val _clothesList = MutableStateFlow<List<SelectedModel>>(emptyList())
+    val clothesList: StateFlow<List<SelectedModel>> = _clothesList.asStateFlow()
+
 
     // Normal Declaration
     //==================================================================================================================
 
     var pathClothesSelected = ""
 
-    val accessoryList = ArrayList<AccessorySelectedModel>()
+    var accessoryList = emptyList<AccessorySelectedModel>()
     val accessorySelectedList = ArrayList<AccessoryModel>()
 
 
@@ -41,6 +49,11 @@ class ChooseClothesAccessoryViewModel : ViewModel() {
     fun setTypeClothes(type: String) {
         _typeClothes.value = type
     }
+
+    fun setClothesList(list: List<SelectedModel>) {
+        _clothesList.value = list
+    }
+
 
     fun updatePathClothesSelected(path: String) {
         pathClothesSelected = path
@@ -55,37 +68,48 @@ class ChooseClothesAccessoryViewModel : ViewModel() {
     }
 
     fun updateAccessoryList(list: List<AccessorySelectedModel>) {
-        accessoryList.clear()
-        accessoryList.addAll(list)
-    }
-
-    suspend fun updateCategoryAccessoryList(position: Int) {
-        accessoryList.forEachIndexed { index, model ->
-            model.isSelected = index == position
-        }
+        accessoryList = list
     }
 
     // Function feature
     //==================================================================================================================
-    suspend fun loadClothesList(pathClothesSelected: String): List<SelectedModel> {
 
+    /* Clothes */
+    suspend fun loadClothesList(pathClothesSelected: String): List<SelectedModel> {
         updatePathClothesSelected(pathClothesSelected)
 
+        // folder clothes
         val folder = _allData.value?.folders?.firstOrNull() ?: return emptyList()
 
-        val returnList = ArrayList<SelectedModel>()
+        val clothesList = ArrayList<SelectedModel>()
+
         for (index in 1..folder.quantity) {
+
+            // VD: category/1.png (API)
             val path = "${folder.category}/$index.png"
-            returnList.add(
+
+            clothesList.add(
                 SelectedModel(
                     path = path,
                     isSelected = path == pathClothesSelected
                 )
             )
         }
-        return returnList
+        setClothesList(clothesList)
+        return clothesList
     }
 
+    fun selectClothes(path: String, position: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _clothesList.value = _clothesList.value.mapIndexed { index, clothesModel ->
+                clothesModel.copy(isSelected = index == position)
+            }
+
+            updatePathClothesSelected(path)
+        }
+    }
+
+    /* Accessory */
     suspend fun loadAccessoryList(pathAccessorySelectedList: String) {
         updatePathAccessorySelectedList(pathAccessorySelectedList)
 
@@ -124,7 +148,7 @@ class ChooseClothesAccessoryViewModel : ViewModel() {
         val list = subAccessoryList.map { item ->
             val path = "$subAccessory/$item"
             SubAccessoryModel(
-                AccessoryModel(
+                accessory = AccessoryModel(
                     key = subAccessory,
                     value = path,
                 ),
@@ -137,7 +161,7 @@ class ChooseClothesAccessoryViewModel : ViewModel() {
         list.add(
             0,
             SubAccessoryModel(
-                AccessoryModel(
+                accessory = AccessoryModel(
                     key = subAccessory,
                     value = ValueKey.NONE_ACCESSORY,
                 ),
@@ -153,22 +177,28 @@ class ChooseClothesAccessoryViewModel : ViewModel() {
             pathClothesSelected
         } else {
             // accessory
-            val json = Gson().toJson(accessorySelectedList)
-            json
+            Gson().toJson(accessorySelectedList)
         }
     }
 
-    suspend fun changeSubAccessory(model: AccessoryModel, position: Int): Int {
+    suspend fun refocusSubAccessory(model: AccessoryModel, position: Int): List<SubAccessoryModel> {
         var positionCategoryAccessory = 0
-        accessoryList.forEachIndexed { index, accessorySelectedModel ->
-            if (accessorySelectedModel.typeAccessory == model.key) {
+
+        accessoryList = accessoryList.mapIndexed { index, accessorySelectedModel ->
+            if (accessorySelectedModel.typeAccessory != model.key) {
+                accessorySelectedModel
+            } else {
                 positionCategoryAccessory = index
-                accessorySelectedModel.subAccessoryList.forEachIndexed { index, subAccessoryModel ->
-                    subAccessoryModel.isSelected = index == position
-                }
+
+                accessorySelectedModel.copy(
+                    subAccessoryList = accessorySelectedModel.subAccessoryList.mapIndexed { indexSub, subModel ->
+                        subModel.copy(isSelected = indexSub == position)
+                    }
+                )
             }
         }
 
+        // update accessorySelectedList (return)
         if (position != 0) {
             if (accessorySelectedList.any { it.key == model.key }) {
                 accessorySelectedList.removeIf { it.key == model.key }
@@ -180,7 +210,12 @@ class ChooseClothesAccessoryViewModel : ViewModel() {
             accessorySelectedList.removeIf { it.key == model.key }
         }
 
-        return positionCategoryAccessory
+        return accessoryList[positionCategoryAccessory].subAccessoryList
     }
 
+    suspend fun refocusAccessory(position: Int) {
+        accessoryList = accessoryList.mapIndexed { index, accessorySelectedModel ->
+            accessorySelectedModel.copy(isSelected = index == position)
+        }
+    }
 }

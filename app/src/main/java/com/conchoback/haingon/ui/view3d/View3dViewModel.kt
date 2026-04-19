@@ -15,11 +15,15 @@ import com.conchoback.haingon.core.utils.key.AssetsKey
 import com.conchoback.haingon.core.utils.key.DomainKey
 import com.conchoback.haingon.core.utils.key.IntentKey
 import com.conchoback.haingon.core.utils.key.ValueKey
+import com.conchoback.haingon.data.local.ClothesSaved
 import com.conchoback.haingon.data.model.DownloadModel
 import com.conchoback.haingon.data.model.clothes.AccessoryModel
 import com.conchoback.haingon.data.model.clothes.ClothesModel
+import com.conchoback.haingon.ui.home.DataRepository
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
+import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -31,7 +35,8 @@ import kotlinx.coroutines.flow.stateIn
 import java.net.HttpURLConnection
 import java.net.URL
 
-class View3dViewModel : ViewModel() {
+@HiltViewModel
+class View3dViewModel @Inject constructor(private val repository: DataRepository) : ViewModel() {
     // Flow Declaration
     //==================================================================================================================
     private val _state = MutableStateFlow(View3dState())
@@ -104,7 +109,7 @@ class View3dViewModel : ViewModel() {
 
         val url = request.url.toString()
 
-        if (url.contains(DomainKey.BASE_URL) || url.contains(DomainKey.BASE_URL_PREVENTIVE)) {
+        if (url.contains(DomainKey.DOMAIN) || url.contains(DomainKey.DOMAIN_PREVENTIVE)) {
             return try {
                 val connection = URL(url).openConnection() as HttpURLConnection
                 connection.requestMethod = "GET"
@@ -198,8 +203,8 @@ class View3dViewModel : ViewModel() {
             imagePath.contains(ValueKey.TEMP_ALBUM) -> "${AssetsKey.DOMAIN_INTERNAL_WEBVIEW}/$imagePath"
             // api
             imagePath.contains(DomainKey.SPECIAL_CATEGORY) -> {
-                val domain = if (DataLocal.isFailBaseURL) DomainKey.BASE_URL_PREVENTIVE else DomainKey.BASE_URL
-                "$domain${DomainKey.SUB_DOMAIN}/${imagePath}"
+                val domain = if (DataLocal.isFailBaseURL) DomainKey.DOMAIN_PREVENTIVE else DomainKey.DOMAIN
+                "$domain${DomainKey.BASE_PATH}/${imagePath}"
             }
             // asset
             else -> "${AssetsKey.DOMAIN_ASSET_WEBVIEW}/$imagePath"
@@ -297,6 +302,15 @@ class View3dViewModel : ViewModel() {
             }
         }
 
+        repository.insertClothesSavedList(
+            list.map {
+                ClothesSaved(
+                    typeClothes = it.typeClothes,
+                    thumbnail = it.thumbnail
+                )
+            }
+        )
+
         return list
     }
 
@@ -322,12 +336,12 @@ class View3dViewModel : ViewModel() {
     }
 
     fun updateAccessory(accessoryList: List<AccessoryModel>): String {
-        val domain = if (DataLocal.isFailBaseURL) DomainKey.BASE_URL_PREVENTIVE else DomainKey.BASE_URL
+        val domain = if (DataLocal.isFailBaseURL) DomainKey.DOMAIN_PREVENTIVE else DomainKey.DOMAIN
 
         val jsonList = accessoryList.map {
             AccessoryModel(
                 key = it.key,
-                value = "$domain${DomainKey.SUB_DOMAIN}/${DomainKey.PREVIEW_3D}/${it.value}.glb"
+                value = "$domain${DomainKey.BASE_PATH}/${DomainKey.PREVIEW_3D}/${it.value}.glb"
             )
         }
         // [key ="", value =""]

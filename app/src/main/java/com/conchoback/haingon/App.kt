@@ -3,7 +3,10 @@ package com.conchoback.haingon
 import android.app.Application
 import com.conchoback.haingon.core.helper.SharePreferenceHelper
 import com.conchoback.haingon.data.model.clothes.SkinModel
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class App : Application() {
     val sharePreference by lazy { SharePreferenceHelper(this) }
     val shirtListDefault = ArrayList<String>()

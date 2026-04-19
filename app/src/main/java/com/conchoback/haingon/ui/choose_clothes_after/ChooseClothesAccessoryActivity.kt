@@ -6,25 +6,27 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.conchoback.haingon.R
 import com.conchoback.haingon.core.base.BaseActivity
+import com.conchoback.haingon.core.extension.checkInternet
 import com.conchoback.haingon.core.extension.gone
 import com.conchoback.haingon.core.extension.handleBackLeftToRight
+import com.conchoback.haingon.core.extension.launchIO
 import com.conchoback.haingon.core.extension.setImageActionBar
 import com.conchoback.haingon.core.extension.tap
 import com.conchoback.haingon.core.extension.visible
-import com.conchoback.haingon.core.helper.InternetHelper
 import com.conchoback.haingon.core.utils.key.IntentKey
 import com.conchoback.haingon.core.utils.key.ValueKey
 import com.conchoback.haingon.data.model.clothes.AccessoryModel
 import com.conchoback.haingon.data.model.PathAPI
+import com.conchoback.haingon.data.model.clothes.SubAccessoryModel
 import com.conchoback.haingon.databinding.ActivityChooseClothesAccessoryBinding
-import com.conchoback.haingon.ui.home.DataViewModel
+import com.conchoback.haingon.ui.home.view_model.DataViewModel
 import com.conchoback.haingon.ui.choose_clothes_after.adapter.CategoryAccessoryAdapter
 import com.conchoback.haingon.ui.choose_clothes_after.adapter.ClothesAdapter
 import com.conchoback.haingon.ui.choose_clothes_after.adapter.SubAccessoryAdapter
-import kotlinx.coroutines.Dispatchers
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
+@AndroidEntryPoint
 class ChooseClothesAccessoryActivity : BaseActivity<ActivityChooseClothesAccessoryBinding>() {
     private val viewModel: ChooseClothesAccessoryViewModel by viewModels()
     private val dataViewModel: DataViewModel by viewModels()
@@ -39,14 +41,16 @@ class ChooseClothesAccessoryActivity : BaseActivity<ActivityChooseClothesAccesso
 
     override fun initView() {
         dataViewModel.ensureData(this, sharePreference)
-
     }
 
     override fun dataObservable() {
+
+        // allData (dataModel) -> allData (viewModel) -> typeClothes (viewmodel)
         lifecycleScope.launch {
             launch { dataViewModel.allData.collect { data -> setupData(data) } }
             launch { viewModel.allData.collect { data -> setupGetDataFromDataVM(data) } }
             launch { viewModel.typeClothes.collect { type -> setupTypeClothes(type) } }
+            launch { viewModel.clothesList.collect { list -> clothesAdapter.submitList(list) } }
         }
     }
 
@@ -71,74 +75,70 @@ class ChooseClothesAccessoryActivity : BaseActivity<ActivityChooseClothesAccesso
     // Handle
     //==================================================================================================================
     private fun handleClothesUI() {
-        binding.rcvClothes.apply {
-            adapter = clothesAdapter
-            itemAnimator = null
-        }
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            val list = viewModel.loadClothesList(intent.getStringExtra(IntentKey.PATH_KEY) ?: "")
-
-            withContext(Dispatchers.Main) {
-                binding.rcvClothes.visible()
-                binding.lnlAccessory.gone()
-
-                clothesAdapter.submitList(list)
+        binding.apply {
+            rcvClothes.apply {
+                adapter = clothesAdapter
+                itemAnimator = null
             }
+
+            rcvClothes.visible()
+            lnlAccessory.gone()
         }
 
-        clothesAdapter.onItemClick = { path, position -> viewModel.updatePathClothesSelected(path) }
+        launchIO(
+            blockIO = { viewModel.loadClothesList(intent.getStringExtra(IntentKey.PATH_KEY) ?: "") }
+        )
+
+        clothesAdapter.onItemClick = { path, position -> viewModel.selectClothes(path, position) }
     }
 
     private fun handleAccessoryUI() {
-        binding.rcvCategoryAccessory.apply {
-            adapter = categoryAccessoryAdapter
-            itemAnimator = null
-        }
-        binding.rcvAccessory.apply {
-            adapter = subAccessoryAdapter
-            itemAnimator = null
-        }
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.loadAccessoryList(intent.getStringExtra(IntentKey.PATH_KEY) ?: "")
-
-            withContext(Dispatchers.Main) {
-                binding.rcvClothes.gone()
-                binding.lnlAccessory.visible()
-                submitCategoryAccessory(0)
+        binding.apply {
+            rcvCategoryAccessory.apply {
+                adapter = categoryAccessoryAdapter
+                itemAnimator = null
             }
+            rcvAccessory.apply {
+                adapter = subAccessoryAdapter
+                itemAnimator = null
+            }
+
+            rcvClothes.gone()
+            lnlAccessory.visible()
         }
 
-        categoryAccessoryAdapter.onItemClick = { position -> checkInternet { changeFocusCategoryAccessory(position) } }
+        launchIO(
+            blockIO = { viewModel.loadAccessoryList(intent.getStringExtra(IntentKey.PATH_KEY) ?: "") },
+            blockMain = { submitCategoryAccessory(0) }
+        )
+
+        categoryAccessoryAdapter.onItemClick = { position -> checkInternet { submitCategoryAccessory(position) } }
         subAccessoryAdapter.onItemClick = { model, position -> checkInternet { changeFocusSubAccessory(model, position) } }
     }
 
-    private fun changeFocusCategoryAccessory(position: Int) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.updateCategoryAccessoryList(position)
-
-            withContext(Dispatchers.Main) {
-                submitCategoryAccessory(position)
-            }
-        }
-    }
 
     private fun changeFocusSubAccessory(model: AccessoryModel, position: Int) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val positionCategoryAccessory = viewModel.changeSubAccessory(model, position)
-
-            withContext(Dispatchers.Main) {
-                submitCategoryAccessory(positionCategoryAccessory)
-            }
-        }
+        launchIO(
+            blockIO = { viewModel.refocusSubAccessory(model, position) },
+            blockMain = { newList -> submitSubAccessory(newList) }
+        )
     }
 
 
     private fun submitCategoryAccessory(position: Int) {
-        categoryAccessoryAdapter.submitList(viewModel.accessoryList)
-        subAccessoryAdapter.submitList(viewModel.accessoryList[position].subAccessoryList)
+        launchIO(
+            blockIO = { viewModel.refocusAccessory(position) },
+            blockMain = {
+                categoryAccessoryAdapter.submitList(viewModel.accessoryList)
+                submitSubAccessory(viewModel.accessoryList[position].subAccessoryList)
+            }
+        )
     }
+
+    private fun submitSubAccessory(subAccessoryList: List<SubAccessoryModel>) {
+        subAccessoryAdapter.submitList(subAccessoryList)
+    }
+
 
     private fun handleDone() {
         checkInternet {
@@ -154,14 +154,6 @@ class ChooseClothesAccessoryActivity : BaseActivity<ActivityChooseClothesAccesso
         }
     }
 
-
-    private fun checkInternet(action: () -> Unit) {
-        if (InternetHelper.isInternetAvailable(this)) {
-            action.invoke()
-        } else {
-            showToast(R.string.please_check_your_network_connection)
-        }
-    }
 
     // Observable
     //==================================================================================================================

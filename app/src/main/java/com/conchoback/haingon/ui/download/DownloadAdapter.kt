@@ -5,8 +5,10 @@ import android.widget.ImageView
 import com.conchoback.haingon.core.base.BaseAdapter
 import com.conchoback.haingon.core.extension.capitalizeFirst
 import com.conchoback.haingon.core.extension.dLog
+import com.conchoback.haingon.core.extension.loadAccessory2DURL
 import com.conchoback.haingon.core.extension.loadImage
 import com.conchoback.haingon.core.extension.tap
+import com.conchoback.haingon.core.helper.LoadClothesHelper
 import com.conchoback.haingon.core.utils.DataLocal
 import com.conchoback.haingon.core.utils.key.AssetsKey
 import com.conchoback.haingon.core.utils.key.DomainKey
@@ -30,43 +32,12 @@ class DownloadAdapter(val context: Context) : BaseAdapter<DownloadModel, ItemDow
             tvTypeClothes.text = type
 
             when (item.typeClothes) {
-                ValueKey.SHIRT -> loadClothesImage(fullDomainImage(item.thumbnail), imvThumb)
-                ValueKey.PANT -> loadClothesImage(fullDomainImage(item.thumbnail), imvThumb)
-                else -> loadClothesImage(fullAccessoryPath(item.thumbnail), imvThumb)
+                ValueKey.SHIRT -> loadImage(LoadClothesHelper.fullDomainImage(context, item.thumbnail), imvThumb)
+                ValueKey.PANT -> loadImage(LoadClothesHelper.fullDomainImage(context, item.thumbnail), imvThumb)
+                else -> loadImage(loadAccessory2DURL(item.thumbnail), imvThumb)
             }
 
             btnDownload.tap { onDownloadClick.invoke(item) }
         }
     }
-
-    fun loadClothesImage(image: String, imv: ImageView) {
-        loadImage(image, imv, true)
-    }
-
-    fun fullDomainImage(image: String): String {
-        return when {
-            image.contains(ValueKey.CLOTHES_ALBUM) -> {
-                // Internal
-                val file = File(context.filesDir, image)
-                file.absolutePath
-            }
-
-            image.contains(AssetsKey.COMBO_ASSET) || image.contains(AssetsKey.BASIC_ASSET) -> {
-                // Asset
-                "${AssetsKey.ASSET_MANAGER}/$image"
-            }
-
-            else -> {
-                // api
-                val domain = if (DataLocal.isFailBaseURL) DomainKey.BASE_URL_PREVENTIVE else DomainKey.BASE_URL
-                "${domain}${DomainKey.SUB_DOMAIN}/$image"
-            }
-        }
-    }
-
-    fun fullAccessoryPath(image: String): String {
-        val domain = if (DataLocal.isFailBaseURL) DomainKey.BASE_URL_PREVENTIVE else DomainKey.BASE_URL
-        return "$domain${DomainKey.SUB_DOMAIN}/${DomainKey.PREVIEW_2D}/${image}.png"
-    }
-
 }

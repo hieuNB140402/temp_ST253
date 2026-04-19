@@ -1,66 +1,144 @@
 package com.conchoback.haingon.ui.home.fragment
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
+import android.view.MotionEvent
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.conchoback.haingon.R
-import com.conchoback.haingon.core.extension.dLog
+import com.conchoback.haingon.core.base.BaseFragment
+import com.conchoback.haingon.core.extension.checkInternet
+import com.conchoback.haingon.core.extension.eLog
+import com.conchoback.haingon.core.extension.gone
+import com.conchoback.haingon.core.extension.launchIO
+import com.conchoback.haingon.core.extension.tap
+import com.conchoback.haingon.core.extension.visible
+import com.conchoback.haingon.core.utils.key.IntentKey
+import com.conchoback.haingon.core.utils.state.DeleteState
+import com.conchoback.haingon.data.model.MyCreationModel
+import com.conchoback.haingon.databinding.FragmentMyCreationBinding
+import com.conchoback.haingon.ui.home.HomeActivity
+import com.conchoback.haingon.ui.home.adapter.MyCreationAdapter
+import com.conchoback.haingon.ui.home.view_model.HomeViewModel
+import com.conchoback.haingon.ui.preview.PreviewActivity
+import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.jvm.java
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class MyCreationFragment : BaseFragment<FragmentMyCreationBinding>() {
+    private val viewModel: HomeViewModel by activityViewModels()
 
-/**
- * A simple [Fragment] subclass.
- * Use the [MyCreationFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class MyCreationFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private val myCreationAdapter by lazy { MyCreationAdapter(requireActivity()) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    override fun setViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentMyCreationBinding {
+        return FragmentMyCreationBinding.inflate(inflater)
+    }
+
+    override fun initView() {
+        binding.actionBar.btnActionBarRight.setImageResource(R.drawable.ic_delete)
+        binding.rcvMyCreation.apply {
+            adapter = myCreationAdapter
+            itemAnimator = null
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_creation, container, false)
+    override fun dataObservable() {
+        lifecycleScope.launch {
+            launch { viewModel.myCreationList.collect { list -> setupMyCreationList(list) } }
+            launch { viewModel.isShowSelection.collect { status -> setupIsLongClick(status) } }
+        }
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MyCreationFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MyCreationFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun viewListener() {
+        val activity = (activity as HomeActivity)
+        binding.apply {
+            layoutActionBar.tap { viewModel.hideSelectMyCreation() }
+            actionBar.btnActionBarRight.tap { handleDelete() }
+
+            rcvMyCreation.addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
+                override fun onInterceptTouchEvent(
+                    recyclerView: RecyclerView, motionEvent: MotionEvent
+                ): Boolean {
+                    return when {
+                        motionEvent.action != MotionEvent.ACTION_UP || recyclerView.findChildViewUnder(
+                            motionEvent.x, motionEvent.y
+                        ) != null -> false
+
+                        else -> {
+                            viewModel.hideSelectMyCreation()
+                            true
+                        }
+                    }
+                }
+
+                override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
+                override fun onTouchEvent(recyclerView: RecyclerView, motionEvent: MotionEvent) {}
+            })
+        }
+
+        myCreationAdapter.apply {
+            onItemClick = { model -> activity.checkInternet { nextScreen(model) } }
+            onItemLongClick = { position -> viewModel.showSelectMyCreation(position) }
+            onItemSelectClick = { position -> viewModel.touchSelectMyCreation(position) }
+        }
+
+    }
+
+    // Init
+    //==================================================================================================================
+
+    // Handle
+    //==================================================================================================================
+    private fun handleDelete() {
+        val homeActivity = (activity as HomeActivity)
+
+        launchIO(
+            blockIO = { viewModel.deleteMyCreation() },
+            blockMain = {state ->
+                when (state) {
+                    DeleteState.Empty -> homeActivity.showToast(R.string.please_select_an_item)
+                    DeleteState.Success -> {}
+                    is DeleteState.Failure -> eLog("handleDelete: ${state.error}")
                 }
             }
+        )
     }
 
-    override fun onResume() {
-        super.onResume()
-        dLog("MyCreationFragment - onResume")
+    private fun nextScreen(model: MyCreationModel) {
+        val nextScreen = Intent(requireActivity(), PreviewActivity::class.java)
+
+        nextScreen.apply {
+            putExtra(IntentKey.INTENT_KEY, Gson().toJson(model))
+        }
+
+        (activity as HomeActivity).resultDelete.launch(nextScreen)
     }
+
+    // Observable
+    //==================================================================================================================
+    private fun setupMyCreationList(list: List<MyCreationModel>) {
+        if (list.isNotEmpty()) {
+            binding.rcvMyCreation.visible()
+            binding.lnlNoItem.gone()
+        } else {
+            binding.rcvMyCreation.gone()
+            binding.lnlNoItem.visible()
+        }
+        myCreationAdapter.submitList(list)
+
+    }
+
+    private fun setupIsLongClick(status: Boolean) {
+        binding.actionBar.btnActionBarRight.isVisible = status
+    }
+    // Result + Permission
+    //==================================================================================================================
+
+    // Ads
+    //==================================================================================================================
 }

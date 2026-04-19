@@ -10,15 +10,17 @@ import com.conchoback.haingon.core.extension.viewModel
 import com.conchoback.haingon.core.utils.state.CallApiState
 import com.conchoback.haingon.core.utils.state.HandleState
 import com.conchoback.haingon.databinding.ActivitySplashBinding
-import com.conchoback.haingon.ui.home.DataViewModel
+import com.conchoback.haingon.ui.home.view_model.DataViewModel
 import com.conchoback.haingon.ui.intro.IntroActivity
 import com.conchoback.haingon.ui.language.LanguageActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.jvm.java
 
+@AndroidEntryPoint
 class SplashActivity : BaseActivity<ActivitySplashBinding>() {
     var intentActivity: Intent? = null
 

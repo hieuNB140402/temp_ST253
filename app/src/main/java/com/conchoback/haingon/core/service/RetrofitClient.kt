@@ -8,7 +8,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 object RetrofitClient : BaseRetrofitHelper() {
     val api =
-        Retrofit.Builder().baseUrl(DomainKey.BASE_URL)
+        Retrofit.Builder().baseUrl(DomainKey.DOMAIN)
             .addConverterFactory(MoshiConverterFactory.create())
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .client(okHttpClient!!)

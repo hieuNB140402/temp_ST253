@@ -12,15 +12,14 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.conchoback.haingon.R
 import com.conchoback.haingon.core.base.BaseActivity
-import com.conchoback.haingon.core.extension.dLog
+import com.conchoback.haingon.core.extension.checkInternet
 import com.conchoback.haingon.core.extension.gone
 import com.conchoback.haingon.core.extension.handleBackLeftToRight
+import com.conchoback.haingon.core.extension.launchIO
 import com.conchoback.haingon.core.extension.setImageActionBar
 import com.conchoback.haingon.core.extension.tap
 import com.conchoback.haingon.core.extension.visible
 import com.conchoback.haingon.core.helper.AnimationHelper
-import com.conchoback.haingon.core.helper.InternetHelper
-import com.conchoback.haingon.core.helper.InternetHelper.checkInternet
 import com.conchoback.haingon.core.utils.key.IntentKey
 import com.conchoback.haingon.core.utils.key.ValueKey
 import com.conchoback.haingon.data.model.PathAPI
@@ -28,12 +27,14 @@ import com.conchoback.haingon.databinding.ActivityChooseClothesBeforeBinding
 import com.conchoback.haingon.ui.choose_clothes_after.ChooseClothesAccessoryViewModel
 import com.conchoback.haingon.ui.choose_clothes_before.adapter.AccessoryAdapter
 import com.conchoback.haingon.ui.choose_clothes_before.adapter.ClothesAdapter
-import com.conchoback.haingon.ui.home.DataViewModel
+import com.conchoback.haingon.ui.home.view_model.DataViewModel
 import com.conchoback.haingon.ui.view3d.View3dActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@AndroidEntryPoint
 class ChooseClothesBeforeActivity : BaseActivity<ActivityChooseClothesBeforeBinding>() {
     private val viewModel: ChooseClothesBeforeViewModel by viewModels()
     private val chooseClothesViewModel: ChooseClothesAccessoryViewModel by viewModels()
@@ -73,64 +74,73 @@ class ChooseClothesBeforeActivity : BaseActivity<ActivityChooseClothesBeforeBind
     // Handle
     //==================================================================================================================
     private fun setupClothesUI() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val clothesList = viewModel.loadClothesList(this@ChooseClothesBeforeActivity)
+        binding.apply {
+            rcvClothes.apply {
+                adapter = clothesAdapter
+                itemAnimator = null
+            }
+            rcvClothes.visible()
+            rcvAccessory.gone()
+        }
 
-            withContext(Dispatchers.Main) {
-                binding.rcvClothes.apply {
-                    adapter = clothesAdapter
-                    itemAnimator = null
-                }
-                binding.rcvClothes.visible()
-                binding.rcvAccessory.gone()
-
+        launchIO(
+            blockIO = { viewModel.loadClothesList(this@ChooseClothesBeforeActivity) },
+            blockMain = { clothesList ->
                 dismissLoading(true)
                 clothesAdapter.submitList(clothesList)
             }
-        }
+        )
+
         clothesAdapter.onItemClick = { path -> handleNextScreen(path) }
     }
 
     private fun setupAccessoryUI() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            chooseClothesViewModel.loadAccessoryList("")
-            val accessoryList = viewModel.mergeAccessoryList(chooseClothesViewModel.accessoryList)
+        binding.apply {
+            rcvAccessory.apply {
+                adapter = accessoryAdapter
+                itemAnimator = null
+            }
+            rcvClothes.gone()
+            rcvAccessory.visible()
+        }
 
-            withContext(Dispatchers.Main) {
-                binding.rcvAccessory.apply {
-                    adapter = accessoryAdapter
-                    itemAnimator = null
-                }
-                binding.rcvClothes.gone()
-                binding.rcvAccessory.visible()
-
+        launchIO(
+            blockIO = {
+                chooseClothesViewModel.loadAccessoryList("")
+                viewModel.mergeAccessoryList(chooseClothesViewModel.accessoryList)
+            },
+            blockMain = { accessoryList ->
                 dismissLoading(true)
                 accessoryAdapter.submitList(accessoryList)
             }
-        }
+        )
 
         accessoryAdapter.onItemClick = { model -> checkInternet { handleNextScreen(viewModel.convertToJson(model)) } }
     }
 
     private fun setupComboUI() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val comboList = viewModel.loadComboList(
-                this@ChooseClothesBeforeActivity,
-                chooseClothesViewModel.loadClothesList("")
-            )
+        binding.apply {
+            rcvClothes.apply {
+                adapter = clothesAdapter
+                itemAnimator = null
+            }
+            rcvClothes.visible()
+            rcvAccessory.gone()
+        }
 
-            withContext(Dispatchers.Main) {
-                binding.rcvClothes.apply {
-                    adapter = clothesAdapter
-                    itemAnimator = null
-                }
-                binding.rcvClothes.visible()
-                binding.rcvAccessory.gone()
-
+        launchIO(
+            blockIO = {
+                viewModel.loadComboList(
+                    this@ChooseClothesBeforeActivity,
+                    chooseClothesViewModel.loadClothesList("")
+                )
+            },
+            blockMain = { comboList ->
                 dismissLoading(true)
                 clothesAdapter.submitList(comboList)
             }
-        }
+        )
+
         clothesAdapter.onItemClick = { path -> checkInternet { handleNextScreen(path) } }
     }
 
@@ -146,13 +156,6 @@ class ChooseClothesBeforeActivity : BaseActivity<ActivityChooseClothesBeforeBind
         startActivity(nextScreen, anim.toBundle())
     }
 
-    fun checkInternet(action: () -> Unit) {
-        if (InternetHelper.isInternetAvailable(this)) {
-            action.invoke()
-        } else {
-            showToast(R.string.please_check_your_network_connection)
-        }
-    }
 
     // Observable
     //==================================================================================================================

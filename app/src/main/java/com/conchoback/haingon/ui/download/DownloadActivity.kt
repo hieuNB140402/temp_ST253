@@ -12,6 +12,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.media3.exoplayer.offline.Download
 import com.conchoback.haingon.R
 import com.conchoback.haingon.core.base.BaseActivity
+import com.conchoback.haingon.core.extension.checkInternet
+import com.conchoback.haingon.core.extension.launchIO
 import com.conchoback.haingon.core.extension.setImageActionBar
 import com.conchoback.haingon.core.extension.startIntentRightToLeft
 import com.conchoback.haingon.core.extension.startIntentWithClearTop
@@ -21,10 +23,12 @@ import com.conchoback.haingon.data.model.DownloadModel
 import com.conchoback.haingon.databinding.ActivityDownloadBinding
 import com.conchoback.haingon.ui.home.HomeActivity
 import com.conchoback.haingon.ui.how_to_use.HowToUseActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@AndroidEntryPoint
 class DownloadActivity : BaseActivity<ActivityDownloadBinding>() {
     private val viewModel: DownloadViewModel by viewModels()
     private val downloadAdapter by lazy { DownloadAdapter(this) }
@@ -68,12 +72,9 @@ class DownloadActivity : BaseActivity<ActivityDownloadBinding>() {
     // Handle
     //==================================================================================================================
     private fun handleDownload(model: DownloadModel) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            showLoading()
-            val isSuccess = viewModel.handleDownload(this@DownloadActivity, model)
-
-            withContext(Dispatchers.Main) {
-
+        launchIO(
+            blockIO = { viewModel.handleDownload(this@DownloadActivity, model) },
+            blockMain = { isSuccess ->
                 dismissLoading(true)
 
                 val toastResult = if (isSuccess) {
@@ -84,7 +85,7 @@ class DownloadActivity : BaseActivity<ActivityDownloadBinding>() {
 
                 showToast(toastResult)
             }
-        }
+        )
     }
 
     // Observable
@@ -92,22 +93,18 @@ class DownloadActivity : BaseActivity<ActivityDownloadBinding>() {
     private fun setupUI(json: String) {
         if (json == "") return
 
-        lifecycleScope.launch(Dispatchers.IO) {
-            val list = viewModel.convertFromJson()
+        launchIO(
+            blockIO = { viewModel.convertFromJson() },
+            blockMain = { list -> downloadAdapter.submitList(list) }
+        )
 
-            withContext(Dispatchers.Main) {
-                downloadAdapter.submitList(list)
-            }
-        }
-
-        downloadAdapter.onDownloadClick = { model -> handleDownload(model) }
+        downloadAdapter.onDownloadClick = { model -> checkInternet { handleDownload(model) } }
     }
 
     // Result + Permission
     //==================================================================================================================
     @SuppressLint("GestureBackNavigation", "MissingSuperCall")
-    override fun onBackPressed() {
-    }
+    override fun onBackPressed() {}
 
     // Ads
     //==================================================================================================================

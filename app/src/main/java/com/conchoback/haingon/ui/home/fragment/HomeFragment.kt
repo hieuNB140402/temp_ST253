@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.conchoback.haingon.R
 import com.conchoback.haingon.core.base.BaseFragment
+import com.conchoback.haingon.core.extension.checkInternet
 import com.conchoback.haingon.core.extension.dLog
 import com.conchoback.haingon.core.extension.startIntent
 import com.conchoback.haingon.core.extension.startIntentRightToLeft
@@ -18,7 +19,7 @@ import com.conchoback.haingon.core.utils.key.ValueKey
 import com.conchoback.haingon.databinding.FragmentHomeBinding
 import com.conchoback.haingon.ui.choose_clothes_before.ChooseClothesBeforeActivity
 import com.conchoback.haingon.ui.home.HomeActivity
-import com.conchoback.haingon.ui.home.HomeViewModel
+import com.conchoback.haingon.ui.home.view_model.HomeViewModel
 import com.conchoback.haingon.ui.how_to_use.HowToUseActivity
 import com.conchoback.haingon.ui.view3d.View3dActivity
 import com.google.common.collect.Multimaps.index

@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitPreventive : BaseRetrofitHelper() {
     val api = Retrofit.Builder()
-        .baseUrl(DomainKey.BASE_URL_PREVENTIVE)
+        .baseUrl(DomainKey.DOMAIN_PREVENTIVE)
         .addConverterFactory(MoshiConverterFactory.create())
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .client(okHttpClient!!)

@@ -1,8 +1,12 @@
 package com.conchoback.haingon.ui.choose_clothes_after.adapter
 
-import android.annotation.SuppressLint
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.core.view.isVisible
-import com.conchoback.haingon.core.base.BaseAdapter
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.conchoback.haingon.core.extension.domain
 import com.conchoback.haingon.core.extension.loadImage
 import com.conchoback.haingon.core.extension.tap
 import com.conchoback.haingon.core.utils.DataLocal
@@ -10,28 +14,42 @@ import com.conchoback.haingon.core.utils.key.DomainKey
 import com.conchoback.haingon.data.model.SelectedModel
 import com.conchoback.haingon.databinding.ItemChooseClothesAccessoryBinding
 
-class ClothesAdapter : BaseAdapter<SelectedModel, ItemChooseClothesAccessoryBinding>(ItemChooseClothesAccessoryBinding::inflate) {
+class ClothesAdapter : ListAdapter<SelectedModel, ClothesAdapter.ClothesViewHolder>(ClothesDiffCallback()) {
     var onItemClick: ((path: String, position: Int) -> Unit) = { _, _ -> }
 
-    override fun onBind(binding: ItemChooseClothesAccessoryBinding, item: SelectedModel, position: Int) {
-        binding.apply {
-            vFocus.isVisible = item.isSelected
-            val domain = if (DataLocal.isFailBaseURL) DomainKey.BASE_URL_PREVENTIVE else DomainKey.BASE_URL
-            loadImage("$domain${DomainKey.SUB_DOMAIN}/${item.path}", imvImage)
+    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ClothesViewHolder {
+        return ClothesViewHolder(ItemChooseClothesAccessoryBinding.inflate(LayoutInflater.from(p0.context), p0, false))
+    }
 
-            root.tap {
-                selectItem(position)
-                onItemClick.invoke(item.path, position)
+    override fun onBindViewHolder(p0: ClothesViewHolder, p1: Int) {
+        p0.bind(getItem(p1))
+    }
+
+    inner class ClothesViewHolder(val binding: ItemChooseClothesAccessoryBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(item: SelectedModel) {
+            binding.apply {
+                vFocus.isVisible = item.isSelected
+
+                // https://lvtglobal.tech/public/app/ST253_ClothesSkinsMakerforRBX_v2/special/1.png
+                val pathURL = domain("${DomainKey.BASE_PATH}/${item.path}")
+
+                loadImage(pathURL, imvImage)
+
+                root.tap { onItemClick.invoke(item.path, bindingAdapterPosition) }
             }
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun selectItem(position: Int) {
-        items.forEachIndexed { index, model ->
-            model.isSelected = index == position
+
+    class ClothesDiffCallback : DiffUtil.ItemCallback<SelectedModel>() {
+        override fun areItemsTheSame(p0: SelectedModel, p1: SelectedModel): Boolean {
+            return p0.id == p1.id
         }
 
-        notifyDataSetChanged()
+        override fun areContentsTheSame(p0: SelectedModel, p1: SelectedModel): Boolean {
+            return p0 == p1
+        }
+
     }
 }

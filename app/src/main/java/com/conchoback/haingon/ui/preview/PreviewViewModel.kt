@@ -1,62 +1,83 @@
 package com.conchoback.haingon.ui.preview
 
-import android.R.attr.type
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.util.Base64
 import androidx.lifecycle.ViewModel
-import com.conchoback.haingon.core.extension.eLog
-import com.conchoback.haingon.core.helper.AssetHelper
-import com.conchoback.haingon.core.helper.BitmapHelper
-import com.conchoback.haingon.core.helper.MediaHelper
-import com.conchoback.haingon.core.utils.key.AssetsKey
+import androidx.media3.common.C
+import com.conchoback.haingon.core.extension.capitalizeFirst
+import com.conchoback.haingon.core.extension.loadAccessory2DURL
+import com.conchoback.haingon.core.helper.LoadClothesHelper
+import com.conchoback.haingon.core.utils.key.ValueKey
+import com.conchoback.haingon.data.model.DownloadModel
+import com.conchoback.haingon.data.model.MyCreationModel
+import com.conchoback.haingon.ui.download.DownloadRepository
+import com.conchoback.haingon.ui.home.DataRepository
+import com.google.gson.Gson
+import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.io.ByteArrayOutputStream
-import java.io.File
 
-class PreviewViewModel : ViewModel() {
+@HiltViewModel
+class PreviewViewModel @Inject constructor(
+    private val repository: DataRepository,
+    private val downloadRepository: DownloadRepository
+) : ViewModel() {
     // Flow Declaration
     //==================================================================================================================
-    private val _clothesType = MutableStateFlow<String>("")
-    val clothesType = _clothesType.asStateFlow()
+    private val _clothesJson = MutableStateFlow<String>("")
+    val clothesJson = _clothesJson.asStateFlow()
 
-    private val _clothesPath = MutableStateFlow<String>("")
-    val clothesPath = _clothesPath.asStateFlow()
     // Normal Declaration
     //==================================================================================================================
-
+    var id = -1
+    var currentClothes = DownloadModel("", "")
 
     // Getter Setter
     //==================================================================================================================
-    fun setData(clothesType: String, path: String) {
-        _clothesType.value = clothesType
-        _clothesPath.value = path
+    fun setClothesJson(value: String) {
+        _clothesJson.value = value
     }
 
+    fun updateId(value: Int) {
+        id = value
+    }
+
+    fun updateCurrentClothes(model: DownloadModel) {
+        currentClothes = model
+    }
 
     // Function feature
     //==================================================================================================================
-    suspend fun sendImageFromPath(context: Context): String {
-        val bitmap = if (_clothesPath.value.contains(AssetsKey.ASSET_MANAGER)) {
-            AssetHelper.getBitmapFromAsset(context, _clothesPath.value)
-        } else {
-            try {
-                BitmapFactory.decodeFile(_clothesPath.value)
-            } catch (e: Exception) {
-                eLog("sendImageFromPath: $e")
-                return ""
-            }
+    fun convertJson(context: Context): Triple<String, String, String> {
+        val model = Gson().fromJson(_clothesJson.value, MyCreationModel::class.java)
+
+        val clothes = model.clothes
+        updateId(model.id)
+        updateCurrentClothes(clothes)
+
+        val (extension, type) = when (clothes.typeClothes) {
+            ValueKey.SHIRT -> "PNG" to "Shirt"
+            ValueKey.PANT -> "PNG" to "Pant"
+            else -> "GLB" to clothes.typeClothes.capitalizeFirst()
         }
 
-        val outputStream = ByteArrayOutputStream()
-        bitmap!!.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-        val base64 = Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP)
+        val fullPathThumb = when (clothes.typeClothes) {
+            ValueKey.SHIRT -> LoadClothesHelper.fullDomainImage(context, clothes.thumbnail)
+            ValueKey.PANT -> LoadClothesHelper.fullDomainImage(context, clothes.thumbnail)
+            else -> loadAccessory2DURL(clothes.thumbnail)
+        }
 
-        val jsMethod =
-            if (_clothesType.value == AssetsKey.SHIRT || _clothesType.value == AssetsKey.T_SHIRT) "setShirtFromBase64" else "setPantsFromBase64"
-
-        return "window.$jsMethod('$base64')"
+        return Triple(fullPathThumb, type, extension)
     }
+
+    // Room
+    suspend fun deleteClothesSavedById() {
+        repository.deleteClothesSavedById(id)
+    }
+
+    suspend fun downloadClothesFileToExternal(context: Context): Boolean {
+        return downloadRepository.downloadClothesFileToExternal(context, currentClothes.thumbnail,
+            currentClothes.typeClothes != ValueKey.SHIRT && currentClothes.typeClothes != ValueKey.PANT)
+    }
+
 }
