@@ -1,6 +1,5 @@
 package com.conchoback.haingon.ui.choose_clothes_after.adapter
 
-import android.R.attr.path
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -16,8 +15,9 @@ import com.conchoback.haingon.data.model.clothes.AccessoryModel
 import com.conchoback.haingon.data.model.clothes.SubAccessoryModel
 import com.conchoback.haingon.databinding.ItemChooseClothesAccessoryBinding
 
-class SubAccessoryAdapter : ListAdapter<SubAccessoryModel, SubAccessoryAdapter.SubAccessoryViewHolder>(SubAccessoryDiffCallback()){
-    var onItemClick: ((model: AccessoryModel, position: Int) -> Unit) = { _,_ -> }
+class SubAccessoryAdapter :
+    ListAdapter<SubAccessoryModel, SubAccessoryAdapter.SubAccessoryViewHolder>(SubAccessoryDiffCallback()) {
+    var onItemClick: ((model: AccessoryModel, position: Int) -> Unit) = { _, _ -> }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): SubAccessoryViewHolder {
         return SubAccessoryViewHolder(ItemChooseClothesAccessoryBinding.inflate(LayoutInflater.from(p0.context), p0, false))
@@ -27,29 +27,32 @@ class SubAccessoryAdapter : ListAdapter<SubAccessoryModel, SubAccessoryAdapter.S
         p0.bind(getItem(p1))
     }
 
-    inner class SubAccessoryViewHolder(val binding: ItemChooseClothesAccessoryBinding) : RecyclerView.ViewHolder(binding.root){
-        fun bind(item: SubAccessoryModel){
+    inner class SubAccessoryViewHolder(val binding: ItemChooseClothesAccessoryBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: SubAccessoryModel) {
             binding.apply {
                 vFocus.isVisible = item.isSelected
-
+                var pathURL = ""
                 if (bindingAdapterPosition != 0) {
 
                     // https://lvtglobal.tech/public/app/ST253_ClothesSkinsMakerforRBX_v2/2D/abcd.png
-                    val pathURL = loadAccessory2DURL(item.accessory.value)
+                    pathURL = loadAccessory2DURL(item.accessory.value)
 
-                    dLog("pathURL[$bindingAdapterPosition]: $pathURL")
+//                    dLog("pathURL[$bindingAdapterPosition]: $pathURL")
 
                     loadImage(pathURL, imvImage)
                 } else {
                     loadImage(R.drawable.ic_none_accessory, imvImage)
                 }
 
-                root.tap { onItemClick.invoke(item.accessory, bindingAdapterPosition) }
+                root.tap {
+                    dLog("pathURL[$bindingAdapterPosition]: $pathURL")
+                    onItemClick.invoke(item.accessory, bindingAdapterPosition)
+                }
             }
         }
     }
 
-    class SubAccessoryDiffCallback : DiffUtil.ItemCallback<SubAccessoryModel>(){
+    class SubAccessoryDiffCallback : DiffUtil.ItemCallback<SubAccessoryModel>() {
         override fun areItemsTheSame(p0: SubAccessoryModel, p1: SubAccessoryModel): Boolean {
             return p0.id == p1.id
         }

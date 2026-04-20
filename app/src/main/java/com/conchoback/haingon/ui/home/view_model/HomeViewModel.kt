@@ -61,7 +61,7 @@ class HomeViewModel @Inject constructor(private val repository: DataRepository) 
                 isSelected = false,
                 isShowSelection = false
             )
-        }
+        }.reversed()
     }
 
     fun touchSelectMyCreation(indexTouch: Int) {

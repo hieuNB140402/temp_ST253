@@ -17,6 +17,7 @@ import com.conchoback.haingon.core.utils.key.IntentKey
 import com.conchoback.haingon.core.utils.key.ValueKey
 import com.conchoback.haingon.data.model.clothes.AccessoryModel
 import com.conchoback.haingon.data.model.PathAPI
+import com.conchoback.haingon.data.model.SelectedModel
 import com.conchoback.haingon.data.model.clothes.SubAccessoryModel
 import com.conchoback.haingon.databinding.ActivityChooseClothesAccessoryBinding
 import com.conchoback.haingon.ui.home.view_model.DataViewModel
@@ -24,6 +25,7 @@ import com.conchoback.haingon.ui.choose_clothes_after.adapter.CategoryAccessoryA
 import com.conchoback.haingon.ui.choose_clothes_after.adapter.ClothesAdapter
 import com.conchoback.haingon.ui.choose_clothes_after.adapter.SubAccessoryAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -50,7 +52,7 @@ class ChooseClothesAccessoryActivity : BaseActivity<ActivityChooseClothesAccesso
             launch { dataViewModel.allData.collect { data -> setupData(data) } }
             launch { viewModel.allData.collect { data -> setupGetDataFromDataVM(data) } }
             launch { viewModel.typeClothes.collect { type -> setupTypeClothes(type) } }
-            launch { viewModel.clothesList.collect { list -> clothesAdapter.submitList(list) } }
+            launch { viewModel.clothesList.collect { list -> submitClothes(list) } }
         }
     }
 
@@ -116,14 +118,12 @@ class ChooseClothesAccessoryActivity : BaseActivity<ActivityChooseClothesAccesso
         subAccessoryAdapter.onItemClick = { model, position -> checkInternet { changeFocusSubAccessory(model, position) } }
     }
 
-
     private fun changeFocusSubAccessory(model: AccessoryModel, position: Int) {
         launchIO(
             blockIO = { viewModel.refocusSubAccessory(model, position) },
             blockMain = { newList -> submitSubAccessory(newList) }
         )
     }
-
 
     private fun submitCategoryAccessory(position: Int) {
         launchIO(
@@ -136,9 +136,26 @@ class ChooseClothesAccessoryActivity : BaseActivity<ActivityChooseClothesAccesso
     }
 
     private fun submitSubAccessory(subAccessoryList: List<SubAccessoryModel>) {
-        subAccessoryAdapter.submitList(subAccessoryList)
+        launchIO(
+            blockIO = { viewModel.getPositionSubAccessorySelected(subAccessoryList) },
+            blockMain = { position ->
+                subAccessoryAdapter.submitList(subAccessoryList)
+                delay(100)
+                if (position != -1) binding.rcvAccessory.smoothScrollToPosition(position)
+            }
+        )
     }
 
+    private fun submitClothes(list: List<SelectedModel>) {
+        launchIO(
+            blockIO = { viewModel.getPositionClothesSelected(list) },
+            blockMain = { position ->
+                clothesAdapter.submitList(list)
+                delay(100)
+                if (position != -1) binding.rcvClothes.smoothScrollToPosition(position)
+            }
+        )
+    }
 
     private fun handleDone() {
         checkInternet {
@@ -153,7 +170,6 @@ class ChooseClothesAccessoryActivity : BaseActivity<ActivityChooseClothesAccesso
             handleBackLeftToRight()
         }
     }
-
 
     // Observable
     //==================================================================================================================

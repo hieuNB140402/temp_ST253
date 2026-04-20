@@ -3,11 +3,13 @@ package com.conchoback.haingon.ui.download
 import android.R.attr.path
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import com.conchoback.haingon.core.extension.eLog
 import com.conchoback.haingon.core.helper.MediaHelper
 import com.conchoback.haingon.core.utils.DataLocal
 import com.conchoback.haingon.core.utils.key.AssetsKey
 import com.conchoback.haingon.core.utils.key.DomainKey
 import com.conchoback.haingon.core.utils.key.ValueKey
+import com.conchoback.haingon.data.model.DownloadListType
 import com.conchoback.haingon.data.model.DownloadModel
 import com.conchoback.haingon.data.model.clothes.AccessoryModel
 import com.google.common.reflect.TypeToken
@@ -45,10 +47,17 @@ class DownloadViewModel @Inject constructor(private val downloadRepository: Down
     // Function feature
     //==================================================================================================================
     suspend fun convertFromJson(): List<DownloadModel> {
-        val type = object : TypeToken<List<DownloadModel>>() {}.type
-        val list: List<DownloadModel> = Gson().fromJson(_jsonList.value, type)
+        return try {
+            val jsonString = _jsonList.value
+            if (jsonString.isNullOrBlank()) return emptyList()
 
-        return list
+            val type = DownloadListType().type
+            Gson().fromJson(jsonString, type) ?: emptyList()
+        } catch (e: Exception) {
+            eLog("convertFromJson: ${e.message}")
+            e.printStackTrace()
+            emptyList()
+        }
     }
 
     suspend fun handleDownload(context: Context): Boolean {

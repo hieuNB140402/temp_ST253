@@ -11,7 +11,7 @@ sealed class View3dAction {
     data class ChangeShirt(val itemShirt: ClothesModel) : View3dAction()
     data class ChangePant(val itemPant: ClothesModel) : View3dAction()
 
-    data class ChangeAccessory(val itemList: List<AccessoryModel>) : View3dAction()
+    data class ChangeAccessory(val accessoryList: List<AccessoryModel>) : View3dAction()
 
     object ClearAccessory : View3dAction()
 

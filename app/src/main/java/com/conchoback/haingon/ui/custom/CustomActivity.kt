@@ -138,7 +138,9 @@ class CustomActivity : BaseActivity<ActivityCustomBinding>() {
         sbSize.onSizeChanged = { progress ->
             val value = maxOf(2f, progress.toFloat())
 
-            rasmView.rasmContext.brushConfig.size = value / 100f
+            val size = value / 100f
+            rasmView.rasmContext.brushConfig.size = size
+            viewModel.brushSizeDefault = size
         }
     }
 
@@ -151,6 +153,7 @@ class CustomActivity : BaseActivity<ActivityCustomBinding>() {
     private fun handleBrush() = with(binding) {
         rasmView.rasmContext.apply {
             brushConfig = BrushesRepository(resources).get(Brush.Pen)
+            brushConfig.size = viewModel.brushSizeDefault
         }
         btnChooseBrush.setBackgroundResource(R.drawable.bg_1000_solid_white)
         btnEraser.setBackgroundResource(R.color.transparent)
@@ -161,6 +164,7 @@ class CustomActivity : BaseActivity<ActivityCustomBinding>() {
     private fun handleEraser() = with(binding) {
         rasmView.rasmContext.apply {
             brushConfig = BrushesRepository(resources).get(Brush.HardEraser)
+            brushConfig.size = viewModel.brushSizeDefault
         }
         btnChooseBrush.setBackgroundResource(R.color.transparent)
         btnEraser.setBackgroundResource(R.drawable.bg_1000_solid_white)

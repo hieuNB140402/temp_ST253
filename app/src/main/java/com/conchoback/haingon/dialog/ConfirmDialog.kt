@@ -27,11 +27,11 @@ class ConfirmDialog(val context: Activity, val title: Int, val description: Int,
     override fun initAction() {
         binding.apply {
             btnLeft.tap {
-                onYesClick.invoke()
+                onNoClick.invoke()
                 dismissDialog()
             }
             btnRight.tap {
-                onNoClick.invoke()
+                onYesClick.invoke()
                 dismissDialog()
             }
         }
@@ -48,8 +48,8 @@ class ConfirmDialog(val context: Activity, val title: Int, val description: Int,
 
     private fun initLayout() {
         binding.apply {
-            btnLeft.text = context.strings(R.string.no)
-            btnLeft.text = context.strings(R.string.yes)
+            btnLeft.text = context.strings(R.string.cancel)
+            btnRight.text = context.strings(R.string.settings)
 
             if (isError) {
                 btnLeft.gone()

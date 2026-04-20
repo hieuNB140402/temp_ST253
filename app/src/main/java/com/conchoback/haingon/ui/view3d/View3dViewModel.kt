@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.webkit.WebViewAssetLoader
 import com.conchoback.haingon.core.extension.eLog
+import com.conchoback.haingon.core.extension.iLog
+import com.conchoback.haingon.core.extension.loadAccessory3DURL
 import com.conchoback.haingon.core.helper.MediaHelper
 import com.conchoback.haingon.core.utils.DataLocal
 import com.conchoback.haingon.core.utils.key.AssetsKey
@@ -16,9 +18,11 @@ import com.conchoback.haingon.core.utils.key.DomainKey
 import com.conchoback.haingon.core.utils.key.IntentKey
 import com.conchoback.haingon.core.utils.key.ValueKey
 import com.conchoback.haingon.data.local.ClothesSaved
+import com.conchoback.haingon.data.model.DownloadListType
 import com.conchoback.haingon.data.model.DownloadModel
 import com.conchoback.haingon.data.model.clothes.AccessoryModel
 import com.conchoback.haingon.data.model.clothes.ClothesModel
+import com.conchoback.haingon.data.model.clothes.AccessoryListType
 import com.conchoback.haingon.ui.home.DataRepository
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
@@ -71,7 +75,7 @@ class View3dViewModel @Inject constructor(private val repository: DataRepository
 
             is View3dAction.ChangePant -> current.copy(pant = action.itemPant)
 
-            is View3dAction.ChangeAccessory -> current.copy(accessories = action.itemList)
+            is View3dAction.ChangeAccessory -> current.copy(accessories = action.accessoryList)
 
             View3dAction.ClearAccessory -> current.copy(accessories = emptyList())
 
@@ -192,7 +196,8 @@ class View3dViewModel @Inject constructor(private val repository: DataRepository
     }
 
     fun convertFromJsonAccessory(clothesSelected: String): List<AccessoryModel> {
-        val type = object : TypeToken<List<AccessoryModel>>() {}.type
+//        val type = object : TypeToken<List<AccessoryModel>>() {}.type
+        val type = AccessoryListType().type
         val list: List<AccessoryModel> = Gson().fromJson(clothesSelected, type)
         return list
     }
@@ -241,10 +246,11 @@ class View3dViewModel @Inject constructor(private val repository: DataRepository
     suspend fun getDownloadData(context: Context): List<DownloadModel> {
         val list = ArrayList<DownloadModel>()
 
-        val shirtModel = shirtFlow.value!!
-        val pantModel = pantFlow.value!!
+        val shirtModel = shirtFlow.value
+        val pantModel = pantFlow.value
         val accessoryModel = accessoryFlow.value
 
+        // Cache Album -> Clothes Album
         suspend fun moveIfInternalFile(currentPath: String): String {
             return if (currentPath.contains(ValueKey.TEMP_ALBUM)) {
                 val fileName = currentPath.split("/").last()
@@ -256,6 +262,8 @@ class View3dViewModel @Inject constructor(private val repository: DataRepository
         }
 
         suspend fun addShirt() {
+            if (shirtModel == null) return
+
             val thumb = moveIfInternalFile(shirtModel.item)
             list.add(
                 DownloadModel(
@@ -266,6 +274,8 @@ class View3dViewModel @Inject constructor(private val repository: DataRepository
         }
 
         suspend fun addPant() {
+            if (pantModel == null) return
+
             val thumb = moveIfInternalFile(pantModel.item)
             list.add(
                 DownloadModel(
@@ -274,8 +284,6 @@ class View3dViewModel @Inject constructor(private val repository: DataRepository
                 )
             )
         }
-
-
 
         when (typeClothes.value) {
             ValueKey.SHIRT -> addShirt()
@@ -291,13 +299,15 @@ class View3dViewModel @Inject constructor(private val repository: DataRepository
                 addShirt()
                 addPant()
 
-                accessoryModel.forEach { item ->
-                    list.add(
-                        DownloadModel(
-                            typeClothes = item.key,
-                            thumbnail = item.value,
+                if (accessoryModel.isNotEmpty()) {
+                    accessoryModel.forEach { item ->
+                        list.add(
+                            DownloadModel(
+                                typeClothes = item.key,
+                                thumbnail = item.value,
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
@@ -336,16 +346,14 @@ class View3dViewModel @Inject constructor(private val repository: DataRepository
     }
 
     fun updateAccessory(accessoryList: List<AccessoryModel>): String {
-        val domain = if (DataLocal.isFailBaseURL) DomainKey.DOMAIN_PREVENTIVE else DomainKey.DOMAIN
-
         val jsonList = accessoryList.map {
             AccessoryModel(
                 key = it.key,
-                value = "$domain${DomainKey.BASE_PATH}/${DomainKey.PREVIEW_3D}/${it.value}.glb"
+                value = loadAccessory3DURL(it.value)
             )
         }
-        // [key ="", value =""]
 
+        // [key ="", value =""]
         val json = Gson().toJson(jsonList)
 
         return "window.setAccessories('$json')"

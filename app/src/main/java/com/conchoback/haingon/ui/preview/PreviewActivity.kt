@@ -81,7 +81,7 @@ class PreviewActivity : BaseActivity<ActivityPreviewBinding>() {
     }
 
     private fun checkStoragePermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU || checkPermissions(permissionViewModel.getStoragePermissions())) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R || checkPermissions(permissionViewModel.getStoragePermissions())) {
             handleDownload()
         } else {
             if (permissionViewModel.needGoToSettings(sharePreference, true)) {

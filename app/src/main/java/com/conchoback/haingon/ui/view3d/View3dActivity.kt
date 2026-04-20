@@ -88,10 +88,10 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
             btnThemeDark.tap { viewModel.dispatch(View3dAction.ChangeTheme(ValueKey.DARK_THEME)) }
             btnThemeLight.tap { viewModel.dispatch(View3dAction.ChangeTheme(ValueKey.LIGHT_THEME)) }
 
-            btnType1.tap { checkInternet { viewModel.dispatch(View3dAction.ChangeTypeCharacter(ValueKey.CHARACTER_1)) } }
-            btnType2.tap { checkInternet { viewModel.dispatch(View3dAction.ChangeTypeCharacter(ValueKey.CHARACTER_2)) } }
-            btnType3.tap { checkInternet { viewModel.dispatch(View3dAction.ChangeTypeCharacter(ValueKey.CHARACTER_3)) } }
-            btnType4.tap { checkInternet { viewModel.dispatch(View3dAction.ChangeTypeCharacter(ValueKey.CHARACTER_4)) } }
+            btnType1.tap(500) { checkInternet { viewModel.dispatch(View3dAction.ChangeTypeCharacter(ValueKey.CHARACTER_1)) } }
+            btnType2.tap(500) { checkInternet { viewModel.dispatch(View3dAction.ChangeTypeCharacter(ValueKey.CHARACTER_2)) } }
+            btnType3.tap(500) { checkInternet { viewModel.dispatch(View3dAction.ChangeTypeCharacter(ValueKey.CHARACTER_3)) } }
+            btnType4.tap(500) { checkInternet { viewModel.dispatch(View3dAction.ChangeTypeCharacter(ValueKey.CHARACTER_4)) } }
 
             btnShirt.tap { handleTapClothes(ValueKey.SHIRT) }
             btnPant.tap { handleTapClothes(ValueKey.PANT) }
@@ -236,6 +236,7 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
                 viewModel.apply {
                     dispatch(View3dAction.ChangeShirt(ClothesModel(ValueKey.SHIRT, pathClothesDefault)))
                     dispatch(View3dAction.ChangePant(ClothesModel(ValueKey.PANT, pathClothesDefault)))
+
                     lifecycleScope.launch {
                         delay(500)
                         dispatch(View3dAction.ChangeAccessory(viewModel.convertFromJsonAccessory(pathClothes)))
@@ -288,7 +289,9 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
     }
 
     private fun renderAccessories(list: List<AccessoryModel>) {
-        binding.webView.evaluateJavascript(viewModel.updateAccessory(list), null)
+        if (list.isNotEmpty()) {
+            binding.webView.evaluateJavascript(viewModel.updateAccessory(list), null)
+        }
         dLog("Accessories: $list")
     }
 

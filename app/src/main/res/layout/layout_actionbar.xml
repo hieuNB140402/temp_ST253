@@ -45,7 +45,7 @@
         android:gravity="center"
         android:text="@string/language"
         android:textColor="@color/blue_000D4C"
-        android:textSize="32sp"
+        android:textSize="20sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/btnActionBarLeft"
         app:layout_constraintEnd_toStartOf="@+id/btnActionBarRight"

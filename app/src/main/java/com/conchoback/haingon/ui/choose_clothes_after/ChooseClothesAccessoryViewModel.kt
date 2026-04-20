@@ -7,6 +7,7 @@ import com.conchoback.haingon.data.model.clothes.AccessoryModel
 import com.conchoback.haingon.data.model.clothes.AccessorySelectedModel
 import com.conchoback.haingon.data.model.PathAPI
 import com.conchoback.haingon.data.model.SelectedModel
+import com.conchoback.haingon.data.model.clothes.AccessoryListType
 import com.conchoback.haingon.data.model.clothes.SubAccessoryModel
 import com.conchoback.haingon.ui.choose_clothes_after.adapter.CategoryAccessoryAdapter
 import com.google.common.collect.Multimaps.index
@@ -61,7 +62,7 @@ class ChooseClothesAccessoryViewModel : ViewModel() {
 
     fun updatePathAccessorySelectedList(path: String) {
         if (path != "") {
-            val type = object : TypeToken<List<AccessoryModel>>() {}.type
+            val type = AccessoryListType().type
             val list: List<AccessoryModel> = Gson().fromJson(path, type)
             accessorySelectedList.addAll(list)
         }
@@ -107,6 +108,10 @@ class ChooseClothesAccessoryViewModel : ViewModel() {
 
             updatePathClothesSelected(path)
         }
+    }
+
+    suspend fun getPositionClothesSelected(list: List<SelectedModel>): Int {
+        return list.indexOfFirst { it.isSelected }
     }
 
     /* Accessory */
@@ -217,5 +222,9 @@ class ChooseClothesAccessoryViewModel : ViewModel() {
         accessoryList = accessoryList.mapIndexed { index, accessorySelectedModel ->
             accessorySelectedModel.copy(isSelected = index == position)
         }
+    }
+
+    suspend fun getPositionSubAccessorySelected(subAccessoryList: List<SubAccessoryModel>): Int {
+        return subAccessoryList.indexOfFirst { it.isSelected }
     }
 }

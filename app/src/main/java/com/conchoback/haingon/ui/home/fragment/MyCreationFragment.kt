@@ -14,8 +14,10 @@ import com.conchoback.haingon.core.extension.checkInternet
 import com.conchoback.haingon.core.extension.eLog
 import com.conchoback.haingon.core.extension.gone
 import com.conchoback.haingon.core.extension.launchIO
+import com.conchoback.haingon.core.extension.strings
 import com.conchoback.haingon.core.extension.tap
 import com.conchoback.haingon.core.extension.visible
+import com.conchoback.haingon.core.helper.LanguageHelper
 import com.conchoback.haingon.core.utils.key.IntentKey
 import com.conchoback.haingon.core.utils.state.DeleteState
 import com.conchoback.haingon.data.model.MyCreationModel
@@ -99,10 +101,10 @@ class MyCreationFragment : BaseFragment<FragmentMyCreationBinding>() {
 
         launchIO(
             blockIO = { viewModel.deleteMyCreation() },
-            blockMain = {state ->
+            blockMain = { state ->
                 when (state) {
                     DeleteState.Empty -> homeActivity.showToast(R.string.please_select_an_item)
-                    DeleteState.Success -> {}
+                    DeleteState.Success -> viewModel.setSelectionState(false)
                     is DeleteState.Failure -> eLog("handleDelete: ${state.error}")
                 }
             }
@@ -117,6 +119,11 @@ class MyCreationFragment : BaseFragment<FragmentMyCreationBinding>() {
         }
 
         (activity as HomeActivity).resultDelete.launch(nextScreen)
+    }
+
+    private fun updateText() = with(binding) {
+        LanguageHelper.setLocale(requireActivity())
+        tvNoItem.text = requireActivity().strings(R.string.your_wardrobe_is_empty)
     }
 
     // Observable
@@ -139,6 +146,10 @@ class MyCreationFragment : BaseFragment<FragmentMyCreationBinding>() {
     // Result + Permission
     //==================================================================================================================
 
+    override fun onResume() {
+        super.onResume()
+        updateText()
+    }
     // Ads
     //==================================================================================================================
 }

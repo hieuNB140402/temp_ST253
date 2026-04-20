@@ -22,10 +22,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:fontFamily="@font/freeman_regular"
+                android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
                 android:text="@string/exit"
-                android:textColor="@color/white"
+                android:textColor="@color/blue_000D4C"
                 android:textSize="24sp" />
 
             <!--            tvDescription-->
@@ -34,17 +34,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:fontFamily="@font/freeman_regular"
+                android:fontFamily="@font/montserrat_medium"
                 android:gravity="center"
                 android:paddingHorizontal="32dp"
                 android:text="@string/your_costume_isn_t_finished_yet_you_still_want_to_exit"
-                android:textColor="@color/white"
+                android:textColor="@color/blue_000D4C"
                 android:textSize="16sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
+                android:layout_marginTop="28dp"
                 android:layout_marginBottom="16dp"
                 android:paddingHorizontal="16dp">
 
@@ -54,14 +54,14 @@
                     style="@style/single_marquee"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_button_purple"
-                    android:fontFamily="@font/freeman_regular"
+                    android:background="@drawable/bg_4_stroke_blue"
+                    android:fontFamily="@font/montserrat_bold"
                     android:gravity="center"
+                    android:layout_marginEnd="16dp"
                     android:paddingVertical="16dp"
-                    android:text="@string/exit"
-                    android:textColor="@color/white"
+                    android:text="@string/cancel"
+                    android:textColor="@color/blue_000D4C"
                     android:textSize="16sp" />
 
                 <!--                btnRight-->
@@ -71,12 +71,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_button_purple"
-                    android:fontFamily="@font/freeman_regular"
+                    android:background="@drawable/bg_4_solid_blue"
+                    android:fontFamily="@font/montserrat_bold"
                     android:gravity="center"
                     android:paddingVertical="16dp"
-                    android:text="@string/cancel"
-                    android:textColor="@color/white"
+                    android:text="@string/exit"
+                    android:textColor="@color/white_F5F5F5"
                     android:textSize="16sp" />
 
             </LinearLayout>

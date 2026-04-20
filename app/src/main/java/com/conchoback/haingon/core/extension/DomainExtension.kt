@@ -12,3 +12,8 @@ fun loadAccessory2DURL(path: String) : String{
     val domain = if (DataLocal.isFailBaseURL) DomainKey.DOMAIN_PREVENTIVE else DomainKey.DOMAIN
     return "$domain${DomainKey.BASE_PATH}/${DomainKey.PREVIEW_2D}/${path}.png"
 }
+
+fun loadAccessory3DURL(path: String) : String{
+    val domain = if (DataLocal.isFailBaseURL) DomainKey.DOMAIN_PREVENTIVE else DomainKey.DOMAIN
+    return "$domain${DomainKey.BASE_PATH}/${DomainKey.PREVIEW_3D}/${path}.glb"
+}

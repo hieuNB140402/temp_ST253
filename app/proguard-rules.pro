@@ -78,10 +78,34 @@
 -keep public enum com.bumptech.glide.load.DataSource { *; }
 -keep public enum com.bumptech.glide.load.EncodeStrategy { *; }
 
--dontwarn com.yalantis.ucrop**
--keep class com.yalantis.ucrop** { *; }
--keep interface com.yalantis.ucrop** { *; }
+# Keep the Generic signatures so Gson can read TypeToken
+-keepattributes Signature, EnclosingMethod, InnerClasses
+
+# Keep your specific data model
+# (Replace the path above with the actual package name of your DownloadModel)
+
+# Prevent Gson from being obfuscated
+-keep class com.google.gson.** { *; }
+# Giữ lại các class ẩn danh được tạo ra cho TypeToken
+-keepattributes Signature, EnclosingMethod, InnerClasses
+-keepclassmembers class * extends com.google.gson.reflect.TypeToken { *; }
+-keep class * extends com.google.gson.reflect.TypeToken
+
+# 1. Bảo vệ các thuộc tính đặc biệt của Kotlin và Gson
+-keepattributes Signature, InnerClasses, EnclosingMethod, *Annotation*, SourceFile, LineNumberTable
+
+# 2. Giữ lại model (Đảm bảo đúng package)
+-keep class com.conchoback.haingon.data.model.** { *; }
+
+# 3. Gson cụ thể hơn
+-keep class com.google.gson.** { *; }
+-keepclassmembers class * implements com.google.gson.TypeAdapterFactory { *; }
+-keepclassmembers class * implements com.google.gson.JsonSerializer { *; }
+-keepclassmembers class * implements com.google.gson.JsonDeserializer { *; }
+
+# 4. Tránh việc R8 làm hỏng TypeToken
+-keepclassmembers class * extends com.google.gson.reflect.TypeToken { *; }
 
 -keep class com.conchoback.haingon.ui.SplashActivity.** {*; }
--keep class  com.conchoback.haingon.data.** {*; }
+-keep class com.conchoback.haingon.data.** {*; }
 -keep public class com.google.android.gms.** { public protected *; }

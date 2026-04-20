@@ -40,11 +40,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layoutActionBar">
 
+        <!--        tvNoItem-->
         <TextView
+            android:id="@+id/tvNoItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_medium"
+            android:scrollbarSize="16sp"
             android:layout_gravity="center_horizontal"
-            android:text="DIT CON ME VAI LON" />
+            android:text="@string/your_wardrobe_is_empty" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,7 +13,7 @@
       "attributes": [],
       "versionCode": 1,
       "versionName": "1.0.0",
-      "outputFile": "ST219_Clothes_Skins_Maker_for_RBX_v1.0.0_03.13.2026-release.apk"
+      "outputFile": "ST253_Clothes_Skins_Maker_for_RBX_2_v1.0.0_04.20.2026-release.apk"
     }
   ],
   "elementType": "File",
@@ -22,14 +22,14 @@
       "minApi": 28,
       "maxApi": 30,
       "baselineProfiles": [
-        "baselineProfiles/1/ST219_Clothes_Skins_Maker_for_RBX_v1.0.0_03.13.2026-release.dm"
+        "baselineProfiles/1/ST253_Clothes_Skins_Maker_for_RBX_2_v1.0.0_04.20.2026-release.dm"
       ]
     },
     {
       "minApi": 31,
       "maxApi": 2147483647,
       "baselineProfiles": [
-        "baselineProfiles/0/ST219_Clothes_Skins_Maker_for_RBX_v1.0.0_03.13.2026-release.dm"
+        "baselineProfiles/0/ST253_Clothes_Skins_Maker_for_RBX_2_v1.0.0_04.20.2026-release.dm"
       ]
     }
   ],

@@ -18,7 +18,7 @@ object LoadClothesHelper {
                 file.absolutePath
             }
 
-            image.contains(AssetsKey.COMBO_ASSET) || image.contains(AssetsKey.BASIC_ASSET) -> {
+            image.contains(AssetsKey.COMBO_ASSET) || image.contains(AssetsKey.BASIC_ASSET) || image.contains(AssetsKey.TRENDING_ASSET)-> {
                 // Asset
                 "${AssetsKey.ASSET_MANAGER}/$image"
             }
