@@ -147,46 +147,7 @@
       "scale": 1.82
     }
   },
-  "gooey-tongue-hat-roblox-k1tlo1bz.glb": {
-    "label": "gooey-tongue-hat-roblox-k1tlo1bz",
-    "attachment": "Hat",
-    "default": {
-      "x": 0,
-      "y": 451,
-      "z": -12,
-      "rx": 2,
-      "ry": 73,
-      "rz": 0,
-      "scale": 2.69
-    },
-    "man": {
-      "x": -290,
-      "y": 871,
-      "z": -616,
-      "rx": 2,
-      "ry": 53,
-      "scale": 2.69,
-      "rz": 0
-    },
-    "woman": {
-      "x": 0,
-      "y": 112,
-      "z": -30,
-      "rx": 7,
-      "ry": 74,
-      "rz": 0,
-      "scale": 2.78
-    },
-    "rounded": {
-      "x": 102,
-      "y": 130,
-      "z": 4,
-      "rx": 5,
-      "ry": 93,
-      "scale": 2.69,
-      "rz": 0
-    }
-  },
+
   "stellar-pink-headphones-roblox-ktwjim0w.glb": {
     "label": "Stellar Pink Headphones Roblox Ktwjim0W",
     "attachment": "Hat",
@@ -259,6 +220,42 @@
       "rx": 5,
       "ry": -180,
       "scale": 1.43
+    }
+  },
+  "kawaii-pink-helmet-roblox-847lowgq.glb": {
+    "label": "kawaii-pink-helmet-roblox-847lowgq",
+    "attachment": "Hat",
+    "default": {
+      "x": -2,
+      "y": 487,
+      "z": -10,
+      "rx": 11,
+      "ry": 69,
+      "scale": 1.89
+    },
+    "man": {
+      "x": -295,
+      "y": 915,
+      "z": -587,
+      "rx": 11,
+      "ry": -310,
+      "scale": 1.95
+    },
+    "woman": {
+      "x": -4,
+      "y": 165,
+      "z": -4,
+      "rx": 7,
+      "ry": 60,
+      "scale": 1.72
+    },
+    "rounded": {
+      "x": -1,
+      "y": 207,
+      "z": 2,
+      "rx": 5,
+      "ry": 60,
+      "scale": 1.65
     }
   }
 }
