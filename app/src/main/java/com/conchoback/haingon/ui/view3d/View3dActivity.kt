@@ -131,17 +131,15 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
                 super.onPageFinished(view, url)
 
                 lifecycleScope.launch {
-                    delay(100)
+                    showLoading()
+                    delay(500)
                     viewModel.dispatch(View3dAction.ChangeTheme(ValueKey.LIGHT_THEME))
-//                    viewModel.dispatch(View3dAction.ChangeTypeClothes(ValueKey.ACCESSORY))
                     viewModel.dispatch(
                         View3dAction.ChangeTypeClothes(
                             intent.getStringExtra(IntentKey.CLOTHES_TYPE) ?: ValueKey.SHIRT
                         )
                     )
-
                 }
-
             }
         }
         webView.loadUrl(ValueKey.HTML_LINK)
@@ -232,13 +230,15 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
                 btnPant.visible()
                 btnAccessory.visible()
 
+                lifecycleScope.launch { showLoading() }
+
                 val pathClothesDefault = sharePreference.getFirstClothes()
                 viewModel.apply {
                     dispatch(View3dAction.ChangeShirt(ClothesModel(ValueKey.SHIRT, pathClothesDefault)))
                     dispatch(View3dAction.ChangePant(ClothesModel(ValueKey.PANT, pathClothesDefault)))
 
                     lifecycleScope.launch {
-                        delay(500)
+                        delay(1000)
                         dispatch(View3dAction.ChangeAccessory(viewModel.convertFromJsonAccessory(pathClothes)))
                     }
                 }
@@ -246,6 +246,8 @@ class View3dActivity : BaseActivity<ActivityView3dBinding>() {
 
             else -> return@with
         }
+
+        lifecycleScope.launch { dismissLoading(true) }
     }
 
     private fun applyTheme(theme: String) = with(binding) {

@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.signature.ObjectKey
 import com.conchoback.haingon.R
 import com.conchoback.haingon.core.base.BaseActivity
+import com.conchoback.haingon.core.extension.dLog
 import com.conchoback.haingon.core.extension.eLog
 import com.conchoback.haingon.core.extension.gone
 import com.conchoback.haingon.core.extension.handleBackLeftToRight
@@ -146,6 +147,7 @@ class CustomActivity : BaseActivity<ActivityCustomBinding>() {
 
     private fun handleChangeColor() {
         binding.colorPicker.subscribe { color, fromUser, shouldPropagate ->
+            dLog("color: $color")
             binding.rasmView.rasmContext.brushColor = color
         }
     }
