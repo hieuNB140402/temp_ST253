@@ -1,6 +1,6 @@
 {
   "obsidian-dragon-wings-roblox-g43z50cp.glb": {
-    "label": "Cánh Obsidian Dragon",
+    "label": "obsidian-dragon-wings-roblox-g43z50cp",
     "attachment": "BodyBack",
     "default": {
       "x": 0,
@@ -39,7 +39,7 @@
     }
   },
   "shadow-demon-guitar-roblox-o0gu6kx6.glb": {
-    "label": "Đàn shadow demon guitar",
+    "label": "shadow-demon-guitar-roblox-o0gu6kx6",
     "attachment": "BodyBack",
     "default": {
       "x": 0,
@@ -60,12 +60,13 @@
       "scale": 5.0
     },
     "woman": {
-      "x": 3,
-      "y": 17,
-      "z": 63,
-      "rx": 0,
-      "ry": -121,
-      "scale": 5
+      "x": -18,
+      "y": 38,
+      "z": 58,
+      "rx": -47,
+      "ry": -139,
+      "rz": -58,
+      "scale": 5.0
     },
     "rounded": {
       "x": -18,
@@ -78,7 +79,7 @@
     }
   },
   "classic-modern-item-roblox-w8f9jhx7.glb": {
-    "label": "Cánh classic modern",
+    "label": "classic-modern-item-roblox-w8f9jhx7",
     "attachment": "BodyBack",
     "default": {
       "x": 0,
@@ -116,7 +117,7 @@
     }
   },
   "crimson-shadow-katana-roblox-tdm9galp.glb": {
-    "label": "Kiếm crimson shadow katana",
+    "label": "crimson-shadow-katana-roblox-tdm9galp",
     "attachment": "BodyBack",
     "default": {
       "x": 0,
@@ -155,7 +156,7 @@
     }
   },
   "sleek-clean-cape-roblox-3edd198e.glb": {
-    "label": "kiếm sleek clean",
+    "label": "sleek-clean-cape-roblox-3edd198e",
     "attachment": "BodyBack",
     "default": {
       "x": 0,
@@ -175,24 +176,26 @@
       "scale": 5.0
     },
     "woman": {
-      "x": 3,
-      "y": -62,
-      "z": 60,
-      "rx": 0,
-      "ry": -118,
-      "scale": 3.81
+      "x": -288,
+      "y": 707,
+      "z": -519,
+      "rx": -53,
+      "ry": -137,
+      "rz": -67,
+      "scale": 5.0
     },
     "rounded": {
-      "x": 3,
-      "y": -14,
-      "z": 67,
-      "rx": 0,
-      "ry": 240,
-      "scale": 4.7
+      "x": -288,
+      "y": 707,
+      "z": -519,
+      "rx": -53,
+      "ry": -137,
+      "rz": -67,
+      "scale": 5.0
     }
   },
   "mystic-knight-wings-roblox-4hukcmop.glb": {
-    "label": "Cánh mystic knight",
+    "label": "mystic-knight-wings-roblox-4hukcmop",
     "attachment": "BodyBack",
     "default": {
       "x": 0,
@@ -228,7 +231,7 @@
     }
   },
   "cuddly-bear-backpack-roblox-2qv9ro7n.glb": {
-    "label": "Balo cuddly bear",
+    "label": "cuddly-bear-backpack-roblox-2qv9ro7n",
     "attachment": "BodyBack",
     "default": {
       "x": 0,
@@ -264,7 +267,7 @@
     }
   },
   "floral-denim-backpack-roblox-p0gzmbh5.glb": {
-    "label": "Balo floral denim",
+    "label": "floral-denim-backpack-roblox-p0gzmbh5",
     "attachment": "BodyBack",
     "default": {
       "x": 0,
@@ -581,46 +584,6 @@
       "scale": 4.0
     }
   },
-  "enchanted-frog-backpack-roblox-4hbgw8m7.glb": {
-    "label": "Enchanted Frog Backpack Roblox 4Hbgw8M7",
-    "attachment": "BodyBack",
-    "default": {
-      "x": 0,
-      "y": 305,
-      "z": 99,
-      "rx": 0,
-      "ry": 58,
-      "scale": 8,
-      "rz": 0
-    },
-    "man": {
-      "x": -285,
-      "y": 774,
-      "z": -484,
-      "rx": 0,
-      "ry": 58,
-      "scale": 7,
-      "rz": 0
-    },
-    "woman": {
-      "x": 3,
-      "y": -5,
-      "z": 73,
-      "rx": 0,
-      "ry": 60,
-      "scale": 7,
-      "rz": 0
-    },
-    "rounded": {
-      "x": 3,
-      "y": -5,
-      "z": 97,
-      "rx": 0,
-      "ry": 58,
-      "scale": 7,
-      "rz": 0
-    }
-  },
   "frosted-winter-scythe-roblox-zgbus9vh.glb": {
     "label": "Frosted Winter Scythe Roblox Zgbus9Vh",
     "attachment": "BodyBack",
@@ -866,30 +829,28 @@
     "attachment": "BodyBack",
     "default": {
       "x": 0,
-      "y": 305,
-      "z": 99,
-      "rx": 0,
-      "ry": 58,
-      "scale": 8,
-      "rz": 0
+      "y": 315,
+      "z": 106,
+      "rx": -4,
+      "ry": 222,
+      "scale": 3
     },
     "man": {
       "x": -285,
-      "y": 774,
-      "z": -484,
-      "rx": 0,
-      "ry": 58,
-      "scale": 7,
-      "rz": 0
+      "y": 709,
+      "z": -482,
+      "rx": -4,
+      "ry": 222,
+      "scale": 3
     },
     "woman": {
-      "x": 3,
-      "y": -5,
-      "z": 73,
-      "rx": 0,
-      "ry": 60,
-      "scale": 7,
-      "rz": 0
+      "x": 0,
+      "y": 14,
+      "z": 126,
+      "rx": -4,
+      "ry": 222,
+      "rz": 2,
+      "scale": 3.0
     },
     "rounded": {
       "x": 0,
